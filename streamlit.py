@@ -44,6 +44,12 @@ quotes = pd.read_csv('quotesRemaining.csv')
 quote = quotes.sample()
 quotes = quotes.drop(quote.index)
 quotes.to_csv('quotesRemaining.csv', index=False)
+
+allNBAs = pd.read_csv('allNBARemaining.csv')
+#pick one quote, delete it from the list, and save the list
+allNBA = allNBAs.sample()
+allNBAs = allNBAs.drop(allNBA.index)
+allNBAs.to_csv('allNBARemaining.csv', index=False)
     
 AidansTeams = ['Boston Celtics', 'Brooklyn Nets', 'New York Knicks', 'Philadelphia 76ers', 'Toronto Raptors', 'Chicago Bulls', 'Cleveland Cavaliers', 'Detroit Pistons', 'San Antonio Spurs','Portland Trail Blazers']
 BrycesTeams = ['Indiana Pacers', 'Milwaukee Bucks', 'Atlanta Hawks', 'Charlotte Hornets', 'Miami Heat', 'Orlando Magic', 'Washington Wizards', 'Denver Nuggets', 'Minnesota Timberwolves', 'Oklahoma City Thunder'] 
@@ -135,3 +141,7 @@ st.markdown(f"""
     </details>
 </div>
 """, unsafe_allow_html=True)
+
+st.markdown(f"<p style='text-align: center; color: Black;font-size: 20px'>All-NBA Teams: {allNBA['Team_List'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</p>", unsafe_allow_html=True)
+st.markdown(f"<p style='text-align: center; color: Black;font-size: 20px'>All-NBA Between: {allNBA['First_Season'].values[0]} and {allNBA['Last_Season'].values[0]}</p>", unsafe_allow_html=True)
+st.markdown(f"<p style='text-align: center; color: Black;font-size: 20px'>Position: {allNBA['Positions'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</p>", unsafe_allow_html=True)
