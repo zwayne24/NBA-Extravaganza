@@ -51,10 +51,10 @@ allNBA = allNBAs.sample()
 allNBAs = allNBAs.drop(allNBA.index)
 allNBAs.to_csv('allNBARemaining.csv', index=False)
     
-AidansTeams = ['Boston Celtics', 'Brooklyn Nets', 'New York Knicks', 'Philadelphia 76ers', 'Toronto Raptors', 'Chicago Bulls', 'Cleveland Cavaliers', 'Detroit Pistons', 'San Antonio Spurs','Portland Trail Blazers']
-BrycesTeams = ['Indiana Pacers', 'Milwaukee Bucks', 'Atlanta Hawks', 'Charlotte Hornets', 'Miami Heat', 'Orlando Magic', 'Washington Wizards', 'Denver Nuggets', 'Minnesota Timberwolves', 'Oklahoma City Thunder'] 
-ZachsTeams = ['Utah Jazz', 'Golden State Warriors', 'LA Clippers', 'Los Angeles Lakers', 'Phoenix Suns', 'Sacramento Kings', 'Dallas Mavericks', 'Houston Rockets', 'Memphis Grizzlies', 'New Orleans Pelicans']
-
+AidansTeams = ['Minnesota Timberwolves','Milwaukee Bucks','Phoenix Suns','Orlando Magic','Miami Heat','Golden State Warriors','Houston Rockets','Los Angeles Clippers','Portland Trail Blazers','Brooklyn Nets']
+BrycesTeams = ['Oklahoma City Thunder','Denver Nuggets','Philadelphia 76ers','Sacramento Kings','Memphis Grizzlies','San Antonio Spurs','Toronto Raptors','Atlanta Hawks','Utah Jazz','Detroit Pistons'] 
+ZachsTeams = ['Boston Celtics', 'Dallas Mavericks', 'New York Knicks','Indiana Pacers', 'Cleveland Cavaliers', 'New Orleans Pelicans','Los Angeles Lakers','Chicago Bulls','Charlotte Hornets', 'Washington Wizards']
+              
 #sort standings by pct
 standings['W'] = standings['W'].astype(int)
 standings['L'] = standings['L'].astype(int)
