@@ -49,7 +49,8 @@ for team in soup.find_all('tr', class_='filled Table__TR Table__TR--sm Table__ev
         wins = team.find('span', class_='stat-cell').text
         losses = team.find_all('span', class_='stat-cell')[1].text
         pct = team.find_all('span', class_='stat-cell')[2].text
-        standings = standings.append({'Team': team_name_list[i], 'W': wins, 'L': losses, 'PCT': pct}, ignore_index=True)
+        new_row = pd.DataFrame([{'Team': team_name_list[i], 'W': wins, 'L': losses, 'PCT': pct}])
+        standings = pd.concat([standings, new_row], ignore_index=True)
     i += 1
 
 # Read All-NBA data from CSV
