@@ -87,6 +87,9 @@ if allNBA['Last_Season'].values[0] == allNBA['First_Season'].values[0]:
     Years = allNBA['First_Season'].values[0]
 else:
     Years = "Between "+allNBA['First_Season'].values[0] + ' and ' + allNBA['Last_Season'].values[0]
+    
+Teams = allNBA['Team_List'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')
+Pos = allNBA['Positions'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')
 
 # Generate HTML content
 html_content = f"""
@@ -252,9 +255,9 @@ html_content = f"""
         <p style="font-size:20px";><b>{allNBA['Players'].values[0]}</b></p>
     </details>
 </div>
-<p style="text-align: center;"><b>All-NBA Teams:</b> {allNBA['Team_List'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</h2>
+<p style="text-align: center;"><b>All-NBA Teams:</b> {Teams}</h2>
 <p style="text-align: center;"><b>All-NBA:</b> {Years}</p>
-<p style="text-align: center;"><b>Position:</b> {allNBA['Positions'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</p>
+<p style="text-align: center;"><b>Position:</b> {Pos}</p>
 <p style="text-align: center;"><b>Teams Made:</b> {allNBA['Times_First_Team'].values[0]+allNBA['Times_Second_Team'].values[0]+allNBA['Times_Third_Team'].values[0]}x</p>
 
 </body>
