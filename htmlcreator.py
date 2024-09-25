@@ -201,7 +201,7 @@ html_content = f"""
     <div class="column">
         <div class="card">
             <div class="card-header">
-                {img_to_html('ZachHead.png', 100)}
+                {img_to_html('photos/ChaseHead.png', 100)}
             </div>
             <div class="card-body">
                 <h2>Chase's Wins: {chaseWins}</h2>
@@ -214,8 +214,8 @@ html_content = f"""
 
     <div class="column">
         <div class="card">
-            <div class="card-header">
-                {img_to_html('BryceCrown.png', 109)}
+            <div class="cfard-header">
+                {img_to_html('photos/BryceHead.png', 109)}
             </div>
             <div class="card-body">
                 <h2>Bryce's Wins: {bryceWins}</h2>
@@ -229,7 +229,7 @@ html_content = f"""
     <div class="column">
         <div class="card">
             <div class="card-header">
-                {img_to_html('ZachCrown.png', 100)}
+                {img_to_html('photos/ZachHead.png', 100)}
             </div>
             <div class="card-body">
                 <h2>Zach's Wins: {zachWins}</h2>
@@ -244,24 +244,23 @@ html_content = f"""
 <hr/>
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
-<p style="text-align: center;"><b>All-NBA Teams:</b> {allNBA['Team_List'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</h2>
-<p style="text-align: center;"><b>All-NBA:</b> {Years}</p>
-<p style="text-align: center;"><b>Position:</b> {allNBA['Positions'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</p>
-<p style="text-align: center;"><b>Times:</b> {allNBA['Times_First_Team'].values[0]+allNBA['Times_Second_Team'].values[0]+allNBA['Times_Third_Team'].values[0]}x</p>
-
 <div style="text-align: center;">
     <details>
         <summary><b>Who am I?</b></summary>
         <p style="font-size:20px";><b>{allNBA['Players'].values[0]}</b></p>
     </details>
 </div>
+<p style="text-align: center;"><b>All-NBA Teams:</b> {allNBA['Team_List'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</h2>
+<p style="text-align: center;"><b>All-NBA:</b> {Years}</p>
+<p style="text-align: center;"><b>Position:</b> {allNBA['Positions'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')}</p>
+<p style="text-align: center;"><b>Teams Made:</b> {allNBA['Times_First_Team'].values[0]+allNBA['Times_Second_Team'].values[0]+allNBA['Times_Third_Team'].values[0]}x</p>
 
 </body>
 </html>
 """
 
 # Write HTML content to a file
-with open('nba_standings.html', 'w') as f:
+with open('index.html', 'w') as f:
     f.write(html_content)
 
-print("HTML file generated: nba_standings.html")
+print("HTML file generated: index.html")
