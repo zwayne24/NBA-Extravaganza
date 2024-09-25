@@ -88,8 +88,8 @@ if allNBA['Last_Season'].values[0] == allNBA['First_Season'].values[0]:
 else:
     Years = "Between "+allNBA['First_Season'].values[0] + ' and ' + allNBA['Last_Season'].values[0]
     
-Teams = allNBA['Team_List'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')
-Pos = allNBA['Positions'].str.replace('[^a-zA-Z, 1-9]', '').values[0].replace(',', ', ')
+Teams = allNBA['Team_List'].values[0].replace('[', '').replace(']', '').replace('\'', '')
+Pos = allNBA['Positions'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 
 # Generate HTML content
 html_content = f"""
