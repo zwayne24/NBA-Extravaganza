@@ -36,7 +36,8 @@ for team in soup.find_all('tr', class_='Table__TR Table__TR--sm Table__even'):
         wins = team.find('span', class_='stat-cell').text
         losses = team.find_all('span', class_='stat-cell')[1].text
         pct = team.find_all('span', class_='stat-cell')[2].text
-        standings = standings.append({'Team': team_name_list[i - 15], 'W': wins, 'L': losses, 'PCT': pct}, ignore_index=True)
+        new_row = pd.DataFrame([{'Team': team_name_list[i-15], 'W': wins, 'L': losses, 'PCT': pct}])
+        standings = pd.concat([standings, new_row], ignore_index=True)
     i += 1
 
 # Continue with the data extraction...
