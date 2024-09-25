@@ -3,7 +3,7 @@ name: Update CSV and HTML
 on:
   schedule:
     # Run every day at 8 AM UTC
-    - cron: '5 15 * * *'
+    - cron: '10 15 * * *'
 
   workflow_dispatch:  # Optional: Allows you to manually trigger the workflow
 
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Specify your Python version
+          python-version: '3.9.12'  # Specify your Python version
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -31,12 +31,12 @@ jobs:
       # Step 4: Run your Python script
       - name: Run update script
         run: |
-          python path/to/your_script.py
+          python htmlcreator.py
 
       # Step 5: Commit and push changes if the script modified the csv or html
       - name: Commit and push changes
         run: |
-          git config --local user.email "your-email@example.com"
+          git config --local user.email "zachrwayne@gmail.com"
           git config --local user.name "GitHub Actions Bot"
           git add .
           git commit -m "Daily update at 8 AM UTC"
