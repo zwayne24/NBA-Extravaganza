@@ -200,6 +200,7 @@ html_content = f"""
     .table-container2 {{
         margin-top: 0px;
         overflow-x: visible;
+        font-size: 12px;
     }}
 
     table {{
@@ -225,7 +226,7 @@ html_content = f"""
     @media screen and (max-width: 600px) {{
         .column {{
             flex: 100%; /* Make each column take up full width */
-            padding: 10px 0;
+            padding: 0px;
         }}
         
         .table-container {{
