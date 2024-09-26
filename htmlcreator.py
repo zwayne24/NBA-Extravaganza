@@ -10,9 +10,9 @@ def img_to_bytes(img_path):
     encoded = base64.b64encode(img_bytes).decode()
     return encoded
 
-def img_to_html(img_path, width=100):
-    img_html = "<img src='data:image/png;base64,{0}' width='{1}' class='img-fluid'>".format(
-      img_to_bytes(img_path), width
+def img_to_html(img_path):
+    img_html = "<img src='data:image/png;base64,{0}' height='100px' class='img-fluid'>".format(
+      img_to_bytes(img_path)
     )
     return img_html
 
@@ -77,6 +77,27 @@ brycesStandings = standings[standings['Team'].isin(BrycesTeams)].reset_index(dro
 brycesStandings.index += 1
 zachsStandings = standings[standings['Team'].isin(ZachsTeams)].reset_index(drop=True)
 zachsStandings.index += 1
+
+teamToAbbr = {
+    'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN', 'Charlotte Hornets': 'CHA', 'Chicago Bulls': 'CHI',
+    'Cleveland Cavaliers': 'CLE', 'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN', 'Detroit Pistons': 'DET', 'Golden State Warriors': 'GS',
+    'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND', 'LA Clippers': 'LAC', 'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
+    'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN', 'New Orleans Pelicans': 'NO', 'New York Knicks': 'NY',
+    'Oklahoma City Thunder': 'OKC', 'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX', 'Portland Trail Blazers': 'POR',
+    'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SA', 'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'
+}
+
+chaseStandingsMobile = chasesStandings.copy()
+bryceStandingsMobile = brycesStandings.copy()
+zachStandingsMobile = zachsStandings.copy()
+
+chaseStandingsMobile['Team'] = chaseStandingsMobile['Team'].map(teamToAbbr)
+bryceStandingsMobile['Team'] = bryceStandingsMobile['Team'].map(teamToAbbr)
+zachStandingsMobile['Team'] = zachStandingsMobile['Team'].map(teamToAbbr)
+
+chaseStandingsMobile = chaseStandingsMobile[['Team', 'W']]
+bryceStandingsMobile = bryceStandingsMobile[['Team', 'W']]
+zachStandingsMobile = zachStandingsMobile[['Team', 'W']]
 
 # Calculate total wins and losses
 chaseWins = chasesStandings['W'].sum()
@@ -175,6 +196,11 @@ html_content = f"""
         margin-top: 15px;
         overflow-x: auto;
     }}
+    
+    .table-container2 {{
+        margin-top: 0px;
+        overflow-x: visible;
+    }}
 
     table {{
         width: 100%;
@@ -195,6 +221,29 @@ html_content = f"""
     td {{
         text-align: center;
     }}
+    
+    @media screen and (max-width: 600px) {{
+        .column {{
+            flex: 100%; /* Make each column take up full width */
+            padding: 10px 0;
+        }}
+        
+        .table-container {{
+            display: none;
+        }}
+        
+        .table-container2 {{
+            display: "block";
+        }}
+    }}
+    
+    @media screen and (min-width: 601px) {{
+        .table-container2 {{
+            display: none;
+        }}
+    }}
+    
+
 </style>
 
 </head>
@@ -206,26 +255,15 @@ html_content = f"""
     <div class="column">
         <div class="card">
             <div class="card-header">
-                {img_to_html('photos/ChaseHead.png', 100)}
+                {img_to_html('photos/ChaseHead.png')}
             </div>
             <div class="card-body">
                 <h2>Chase's Wins: {chaseWins}</h2>
                 <div class="table-container">
                     {chasesStandings.to_html(index=False)}
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="column">
-        <div class="card">
-            <div class="cfard-header">
-                {img_to_html('photos/BryceHead.png', 109)}
-            </div>
-            <div class="card-body">
-                <h2>Bryce's Wins: {bryceWins}</h2>
-                <div class="table-container">
-                    {brycesStandings.to_html(index=False)}
+                <div class="table-container2">
+                    {chaseStandingsMobile.to_html(index=False)}
                 </div>
             </div>
         </div>
@@ -234,18 +272,37 @@ html_content = f"""
     <div class="column">
         <div class="card">
             <div class="card-header">
-                {img_to_html('photos/ZachHead.png', 100)}
+                {img_to_html('photos/BryceHead.png')}
+            </div>
+            <div class="card-body">
+                <h2>Bryce's Wins: {bryceWins}</h2>
+                <div class="table-container">
+                    {brycesStandings.to_html(index=False)}
+                </div>
+                <div class="table-container2">
+                    {bryceStandingsMobile.to_html(index=False)}
+                </div>        
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card">
+            <div class="card-header">
+                {img_to_html('photos/ZachHead.png')}
             </div>
             <div class="card-body">
                 <h2>Zach's Wins: {zachWins}</h2>
-                <div class="table-container">
+                <div class="table-container" >
                     {zachsStandings.to_html(index=False)}
+                </div>
+                <div class="table-container2">
+                    {zachStandingsMobile.to_html(index=False)}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <hr/>
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
