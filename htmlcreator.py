@@ -69,7 +69,7 @@ ZachsTeams = ['Boston Celtics', 'Dallas Mavericks', 'New York Knicks', 'Indiana 
 standings['W'] = standings['W'].astype(int)
 standings['L'] = standings['L'].astype(int)
 standings['PCT'] = standings['PCT'].astype(float)
-standings = standings.sort_values(by='PCT', ascending=False).drop(columns=['PCT'])
+standings = standings.sort_values(by='W', ascending=False).drop(columns=['PCT'])
 
 chasesStandings = standings[standings['Team'].isin(ChasesTeams)].reset_index(drop=True)
 chasesStandings.index += 1
