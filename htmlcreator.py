@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import base64
 from pathlib import Path
+import matplotlib.pyplot as plt
+from datetime import date
 
 # Function to convert image to base64
 def img_to_bytes(img_path):
@@ -104,6 +106,35 @@ chaseWins = chasesStandings['W'].sum()
 bryceWins = brycesStandings['W'].sum()
 zachWins = zachsStandings['W'].sum()
 
+df = pd.read_excel('Wins_Over_Time.xlsx') 
+# add on to end of dataframe with todays data and wins
+todaysData = pd.DataFrame({'Day': date.today()-pd.Timedelta(days=1), 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})  
+df = pd.concat([df, todaysData], ignore_index=True)
+# save to excel
+df.to_excel('Wins_Over_Time.xlsx', index=False)
+df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
+# format dat as Oct-22
+df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
+plt.figure(figsize=(10, 6))
+plt.plot(df['Day'], df['Chase'], label='Chase', marker='o', color='blue')
+plt.plot(df['Day'], df['Bryce'],  label='Bryce', marker='o', color='grey')
+plt.plot(df['Day'], df['Zach'], label='Zach', marker='o', color='green')
+plt.yticks([])
+plt.xticks(rotation=45)
+for i, txt in enumerate(df['Chase']):
+    if i == len(df)-1:
+        plt.annotate("+"+str(txt), (df['Day'][i], df['Chase'][i]), textcoords="offset points", xytext=(0,10), ha='center')
+for i, txt in enumerate(df['Zach']):
+    if i == len(df)-1:
+        plt.annotate("+"+str(txt), (df['Day'][i], df['Zach'][i]), textcoords="offset points", xytext=(0,10), ha='center')
+for i, txt in enumerate(df['Bryce']):
+    if i == len(df)-1:
+        plt.annotate("+"+str(txt), (df['Day'][i], df['Bryce'][i]), textcoords="offset points", xytext=(0,10), ha='center')
+plt.box(False)
+plt.legend(loc='upper left')
+plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=True)
+plt.savefig('photos/Wins_Over_Time.png')
+
 if allNBA['Last_Season'].values[0] == allNBA['First_Season'].values[0]:
     Years = allNBA['First_Season'].values[0]
 else:
@@ -120,6 +151,7 @@ html_content = f"""
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Standings</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
     /* Existing styles */
     body {{
@@ -223,6 +255,10 @@ html_content = f"""
         text-align: center;
     }}
     
+    #myLineChart {{
+        width: 100%;
+    }}
+    
     @media screen and (max-width: 600px) {{
         .column {{
             flex: 100%; /* Make each column take up full width */
@@ -242,8 +278,18 @@ html_content = f"""
         .table-container2 {{
             display: none;
         }}
+        #chart-container {{
+            display: none;
+        }}
     }}
     
+    ch {{
+        text-decoration: underline;
+        -webkit-text-decoration-color: red; /* safari still uses vendor prefix */
+        text-decoration-color: red;
+        font-size: 24px;
+        font-weight:bold;
+    }}
 
 </style>
 
@@ -251,6 +297,79 @@ html_content = f"""
 <body>
 
 <h1>NBA Extravaganza</h1>
+<div id="chart-container">
+    <canvas id="myLineChart"></canvas>
+</div>
+<script>
+    var ctx = document.getElementById('myLineChart').getContext('2d');
+    
+    const myLineChart = new Chart(ctx, {{
+        type: 'line',
+        data: {{
+            labels: {df['Day'].to_list()},
+            datasets: [{{
+                label: 'Chase',
+                data: {df['Chase'].to_list()},
+                fill: false,
+                borderColor: '#2774AE',
+                tension: 0.1,
+                pointRadius: 0
+            }},
+            {{
+                label: 'Bryce',
+                data: {df['Bryce'].to_list()},
+                fill: false,
+                borderColor: '#57068c',
+                tension: 0.1,
+                pointRadius: 0
+            }},
+            {{
+                label: 'Zach',
+                data: {df['Zach'].to_list()},
+                fill: false,
+                borderColor: '#e21833',
+                tension: 0.1,
+                pointRadius: 0
+            }}]
+        }},
+        
+        options: {{
+            responsive: false,
+            scales: {{
+                y: {{
+                    beginAtZero: true,
+                    grid: {{
+                        display: false // Hide y-axis gridlines
+                    }},
+                    title: {{
+                        display: false, // Show y-axis title
+                    }}                
+                }},
+                x: {{
+                    grid: {{
+                        display: false // Hide x-axis gridlines
+                    }}
+                }}
+            }},
+            plugins: {{
+                legend: {{
+                    display: false,
+                    position: 'left',
+                    fullSize: false,
+                }},
+                title: {{
+                    display: true,
+                    text: 'Wins Margin',
+                    font: {{
+                        size: 15
+                    }},
+                    align: 'start',
+                    color: 'black'
+                }},
+            }}
+        }}
+    }});
+</script>           
 
 <div class="row">
     <div class="column">
@@ -258,6 +377,7 @@ html_content = f"""
             <div class="card-header">
                 {img_to_html('photos/ChaseHead.png')}
             </div>
+            <hr color="#2774AE">
             <div class="card-body">
                 <h2>Chase's Wins: {chaseWins}</h2>
                 <div class="table-container">
@@ -275,6 +395,7 @@ html_content = f"""
             <div class="card-header">
                 {img_to_html('photos/BryceHead.png')}
             </div>
+            <hr color="#57068c">
             <div class="card-body">
                 <h2>Bryce's Wins: {bryceWins}</h2>
                 <div class="table-container">
@@ -292,6 +413,7 @@ html_content = f"""
             <div class="card-header">
                 {img_to_html('photos/ZachHead.png')}
             </div>
+            <hr color="#e21833">
             <div class="card-body">
                 <h2>Zach's Wins: {zachWins}</h2>
                 <div class="table-container" >
@@ -321,7 +443,6 @@ html_content = f"""
 </body>
 </html>
 """
-
 # Write HTML content to a file
 with open('index.html', 'w') as f:
     f.write(html_content)
