@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import base64
 from pathlib import Path
-import matplotlib.pyplot as plt
 from datetime import date
 
 # Function to convert image to base64
@@ -115,25 +114,6 @@ df.to_excel('Wins_Over_Time.xlsx', index=False)
 df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
 # format dat as Oct-22
 df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
-plt.figure(figsize=(10, 6))
-plt.plot(df['Day'], df['Chase'], label='Chase', marker='o', color='blue')
-plt.plot(df['Day'], df['Bryce'],  label='Bryce', marker='o', color='grey')
-plt.plot(df['Day'], df['Zach'], label='Zach', marker='o', color='green')
-plt.yticks([])
-plt.xticks(rotation=45)
-for i, txt in enumerate(df['Chase']):
-    if i == len(df)-1:
-        plt.annotate("+"+str(txt), (df['Day'][i], df['Chase'][i]), textcoords="offset points", xytext=(0,10), ha='center')
-for i, txt in enumerate(df['Zach']):
-    if i == len(df)-1:
-        plt.annotate("+"+str(txt), (df['Day'][i], df['Zach'][i]), textcoords="offset points", xytext=(0,10), ha='center')
-for i, txt in enumerate(df['Bryce']):
-    if i == len(df)-1:
-        plt.annotate("+"+str(txt), (df['Day'][i], df['Bryce'][i]), textcoords="offset points", xytext=(0,10), ha='center')
-plt.box(False)
-plt.legend(loc='upper left')
-plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=True)
-plt.savefig('photos/Wins_Over_Time.png')
 
 if allNBA['Last_Season'].values[0] == allNBA['First_Season'].values[0]:
     Years = allNBA['First_Season'].values[0]
