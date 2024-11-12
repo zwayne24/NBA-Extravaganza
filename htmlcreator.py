@@ -157,7 +157,7 @@ if schedule_table:
             'away_team': away_team,
             'home_team': home_team,
             'time': time,
-            'odds': odds.split('O/U')[0] if odds else None,
+            'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
         })
         
 # Create a DataFrame from the matchups list
