@@ -123,6 +123,69 @@ else:
 Teams = allNBA['Team_List'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 Pos = allNBA['Positions'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 
+url = 'https://www.espn.com/nba/schedule'
+headers = {
+    'User-Agent': 'Mozilla/5.0'
+}
+response = requests.get(url, headers=headers)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Locate the schedule table
+matchups = []
+
+schedule_table = soup.find('div', class_='ScheduleTables')
+
+if schedule_table:
+    # Find each matchup row
+    rows = schedule_table.find_all('tr', class_='Table__TR--sm')
+
+    for row in rows:
+        # Extract team names
+        teams = row.find_all('a', class_='AnchorLink')
+        away_team = teams[1].text.strip() if teams else None
+        home_team = teams[3].text.strip() if len(teams) > 1 else None
+        
+        # Extract time
+        time = row.find('td', class_='date__col').text.strip() if row.find('td', class_='date__col') else None
+        
+        # Extract odds (e.g., point spread)
+        odds_info = row.find('div', class_='Odds__Message')
+        odds = odds_info.text.strip() if odds_info else None
+
+        # Store each matchup as a dictionary
+        matchups.append({
+            'away_team': away_team,
+            'home_team': home_team,
+            'time': time,
+            'odds': odds.split('O/U')[0] if odds else None,
+        })
+        
+# Create a DataFrame from the matchups list
+matchups_df = pd.DataFrame(matchups)
+html_table = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody>"
+for i, row in matchups_df.iterrows():
+    # if row['Home Team'] = ChasesTeams first row
+    for team in ChasesTeams:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            html_table += f"<td style='color:#2774AE'>{row['home_team']}</td>"
+    for team in BrycesTeams:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            html_table += f"<td style='color:#57068c'>{row['home_team']}</td>"
+    for team in ZachsTeams:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            html_table += f"<td style='color:#e21833'>{row['home_team']}</td>"
+    for team in ChasesTeams:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            html_table += f"<td style='color:#2774AE'>{row['away_team']}</td>"
+    for team in BrycesTeams:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            html_table += f"<td style='color:#57068c'>{row['away_team']}</td>"
+    for team in ZachsTeams:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            html_table += f"<td style='color:#e21833'>{row['away_team']}</td>"
+    html_table += f"<td>{row['time']}</td><td>{row['odds']}</td></tr>"
+html_table += "</tbody></table>"
+
 # Generate HTML content
 html_content = f"""
 <!DOCTYPE html>
@@ -407,6 +470,9 @@ html_content = f"""
     </div>
 </div>
 <hr/>
+
+<h2 style="text-align: center;">Today's Games</h2>
+{html_table}
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
 <div style="text-align: center;">
