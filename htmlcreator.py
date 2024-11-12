@@ -133,7 +133,7 @@ soup = BeautifulSoup(response.text, 'html.parser')
 # Locate the schedule table
 matchups = []
 
-schedule_table = soup.find('div', class_='ScheduleTables')
+schedule_table = soup.find_all('div', class_='ScheduleTables')[1]
 
 if schedule_table:
     # Find each matchup row
@@ -159,14 +159,14 @@ if schedule_table:
             'time': time,
             'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
         })
-        
+
 # Create a DataFrame from the matchups list
 matchups_df = pd.DataFrame(matchups)
 html_table = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody>"
 for i, row in matchups_df.iterrows():
     # if row['Home Team'] = ChasesTeams first row
     for team in ChasesTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
             html_table += f"<td style='color:#2774AE'>{team}</td>"
     for team in BrycesTeams:
         if row['home_team'] == ' '.join(team.split(' ')[:-1]):
@@ -175,7 +175,7 @@ for i, row in matchups_df.iterrows():
         if row['home_team'] == ' '.join(team.split(' ')[:-1]):
             html_table += f"<td style='color:#e21833'>{team}</td>"
     for team in ChasesTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
             html_table += f"<td style='color:#2774AE'>{team}</td>"
     for team in BrycesTeams:
         if row['away_team'] == ' '.join(team.split(' ')[:-1]):
