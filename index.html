@@ -160,10 +160,10 @@
     const myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Oct-21', 'Oct-22', 'Oct-23', 'Oct-24', 'Oct-25', 'Oct-26', 'Oct-27', 'Oct-28', 'Oct-29', 'Oct-30', 'Oct-31', 'Nov-01', 'Nov-02', 'Nov-03', 'Nov-04', 'Nov-05', 'Nov-06', 'Nov-07', 'Nov-08', 'Nov-09', 'Nov-10', 'Nov-11'],
+            labels: ['Oct-21', 'Oct-22', 'Oct-23', 'Oct-24', 'Oct-25', 'Oct-26', 'Oct-27', 'Oct-28', 'Oct-29', 'Oct-30', 'Oct-31', 'Nov-01', 'Nov-02', 'Nov-03', 'Nov-04', 'Nov-05', 'Nov-06', 'Nov-07', 'Nov-08', 'Nov-09', 'Nov-10', 'Nov-11', 'Nov-12'],
             datasets: [{
                 label: 'Chase',
-                data: [0, 0, 2, 2, 3, 4, 5, 7, 6, 7, 7, 7, 5, 3, 5, 5, 5, 6, 6, 6, 6, 6],
+                data: [0, 0, 2, 2, 3, 4, 5, 7, 6, 7, 7, 7, 5, 3, 5, 5, 5, 6, 6, 6, 6, 6, 9],
                 fill: false,
                 borderColor: '#2774AE',
                 tension: 0.1,
@@ -171,7 +171,7 @@
             },
             {
                 label: 'Bryce',
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 fill: false,
                 borderColor: '#57068c',
                 tension: 0.1,
@@ -179,7 +179,7 @@
             },
             {
                 label: 'Zach',
-                data: [0, 2, 4, 5, 8, 8, 6, 9, 8, 12, 10, 13, 10, 9, 7, 7, 7, 6, 7, 8, 7, 6],
+                data: [0, 2, 4, 5, 8, 8, 6, 9, 8, 12, 10, 13, 10, 9, 7, 7, 7, 6, 7, 8, 7, 6, 5],
                 fill: false,
                 borderColor: '#e21833',
                 tension: 0.1,
@@ -233,7 +233,7 @@
             </div>
             <hr color="#2774AE">
             <div class="card-body">
-                <h2>Chase's Wins: 54</h2>
+                <h2>Chase's Wins: 59</h2>
                 <div class="table-container">
                     <table border="1" class="dataframe">
   <thead>
@@ -245,23 +245,18 @@
   </thead>
   <tbody>
     <tr>
-      <td>Golden State Warriors</td>
-      <td>8</td>
+      <td>Phoenix Suns</td>
+      <td>9</td>
       <td>2</td>
     </tr>
     <tr>
-      <td>Phoenix Suns</td>
-      <td>8</td>
+      <td>Golden State Warriors</td>
+      <td>9</td>
       <td>2</td>
     </tr>
     <tr>
       <td>Houston Rockets</td>
       <td>7</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <td>Minnesota Timberwolves</td>
-      <td>6</td>
       <td>4</td>
     </tr>
     <tr>
@@ -271,8 +266,13 @@
     </tr>
     <tr>
       <td>Orlando Magic</td>
-      <td>5</td>
       <td>6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>Minnesota Timberwolves</td>
+      <td>6</td>
+      <td>5</td>
     </tr>
     <tr>
       <td>Brooklyn Nets</td>
@@ -282,16 +282,16 @@
     <tr>
       <td>Miami Heat</td>
       <td>4</td>
-      <td>5</td>
+      <td>6</td>
     </tr>
     <tr>
       <td>Portland Trail Blazers</td>
-      <td>3</td>
+      <td>4</td>
       <td>8</td>
     </tr>
     <tr>
       <td>Milwaukee Bucks</td>
-      <td>2</td>
+      <td>3</td>
       <td>8</td>
     </tr>
   </tbody>
@@ -307,20 +307,16 @@
   </thead>
   <tbody>
     <tr>
-      <td>GS</td>
-      <td>8</td>
+      <td>PHX</td>
+      <td>9</td>
     </tr>
     <tr>
-      <td>PHX</td>
-      <td>8</td>
+      <td>GS</td>
+      <td>9</td>
     </tr>
     <tr>
       <td>HOU</td>
       <td>7</td>
-    </tr>
-    <tr>
-      <td>MIN</td>
-      <td>6</td>
     </tr>
     <tr>
       <td>LAC</td>
@@ -328,7 +324,11 @@
     </tr>
     <tr>
       <td>ORL</td>
-      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>MIN</td>
+      <td>6</td>
     </tr>
     <tr>
       <td>BKN</td>
@@ -340,11 +340,11 @@
     </tr>
     <tr>
       <td>POR</td>
-      <td>3</td>
+      <td>4</td>
     </tr>
     <tr>
       <td>MIL</td>
-      <td>2</td>
+      <td>3</td>
     </tr>
   </tbody>
 </table>
@@ -360,7 +360,7 @@
             </div>
             <hr color="#57068c">
             <div class="card-body">
-                <h2>Bryce's Wins: 48</h2>
+                <h2>Bryce's Wins: 50</h2>
                 <div class="table-container">
                     <table border="1" class="dataframe">
   <thead>
@@ -392,34 +392,34 @@
       <td>5</td>
     </tr>
     <tr>
+      <td>Atlanta Hawks</td>
+      <td>5</td>
+      <td>7</td>
+    </tr>
+    <tr>
       <td>San Antonio Spurs</td>
       <td>5</td>
       <td>6</td>
     </tr>
     <tr>
-      <td>Atlanta Hawks</td>
-      <td>4</td>
-      <td>7</td>
-    </tr>
-    <tr>
       <td>Detroit Pistons</td>
-      <td>4</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <td>Philadelphia 76ers</td>
-      <td>2</td>
+      <td>5</td>
       <td>7</td>
     </tr>
     <tr>
       <td>Utah Jazz</td>
       <td>2</td>
-      <td>7</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>Philadelphia 76ers</td>
+      <td>2</td>
+      <td>8</td>
     </tr>
     <tr>
       <td>Toronto Raptors</td>
       <td>2</td>
-      <td>9</td>
+      <td>10</td>
     </tr>
   </tbody>
 </table>
@@ -450,23 +450,23 @@
       <td>6</td>
     </tr>
     <tr>
+      <td>ATL</td>
+      <td>5</td>
+    </tr>
+    <tr>
       <td>SA</td>
       <td>5</td>
     </tr>
     <tr>
-      <td>ATL</td>
-      <td>4</td>
-    </tr>
-    <tr>
       <td>DET</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <td>PHI</td>
-      <td>2</td>
+      <td>5</td>
     </tr>
     <tr>
       <td>UTA</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>PHI</td>
       <td>2</td>
     </tr>
     <tr>
@@ -487,7 +487,7 @@
             </div>
             <hr color="#e21833">
             <div class="card-body">
-                <h2>Zach's Wins: 54</h2>
+                <h2>Zach's Wins: 55</h2>
                 <div class="table-container" >
                     <table border="1" class="dataframe">
   <thead>
@@ -506,7 +506,7 @@
     <tr>
       <td>Boston Celtics</td>
       <td>9</td>
-      <td>2</td>
+      <td>3</td>
     </tr>
     <tr>
       <td>Los Angeles Lakers</td>
@@ -519,19 +519,19 @@
       <td>5</td>
     </tr>
     <tr>
+      <td>New York Knicks</td>
+      <td>5</td>
+      <td>5</td>
+    </tr>
+    <tr>
       <td>Dallas Mavericks</td>
       <td>5</td>
-      <td>5</td>
+      <td>6</td>
     </tr>
     <tr>
       <td>Charlotte Hornets</td>
       <td>4</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <td>New York Knicks</td>
-      <td>4</td>
-      <td>5</td>
+      <td>7</td>
     </tr>
     <tr>
       <td>Chicago Bulls</td>
@@ -577,15 +577,15 @@
       <td>5</td>
     </tr>
     <tr>
+      <td>NY</td>
+      <td>5</td>
+    </tr>
+    <tr>
       <td>DAL</td>
       <td>5</td>
     </tr>
     <tr>
       <td>CHA</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <td>NY</td>
       <td>4</td>
     </tr>
     <tr>
@@ -610,19 +610,19 @@
 <hr/>
 
 <h2 style="text-align: center;">Today's Games</h2>
-<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#e21833'>Boston Celtics</td><td style='color:#57068c'>Atlanta Hawks</td><td>7:00 PM</td><td>BOS -15.5</td></tr><td style='color:#57068c'>Detroit Pistons</td><td style='color:#2774AE'>Miami Heat</td><td>7:00 PM</td><td>MIA -1.5</td></tr><td style='color:#2774AE'>Orlando Magic</td><td style='color:#e21833'>Charlotte Hornets</td><td>7:00 PM</td><td>ORL -6.5</td></tr><td style='color:#57068c'>Philadelphia 76ers</td><td style='color:#e21833'>New York Knicks</td><td>7:30 PM</td><td>PHI -1.5</td></tr><td style='color:#2774AE'>Milwaukee Bucks</td><td style='color:#57068c'>Toronto Raptors</td><td>8:00 PM</td><td>MIL -7.5</td></tr><td style='color:#57068c'>Utah Jazz</td><td style='color:#2774AE'>Phoenix Suns</td><td>9:00 PM</td><td>PHX -3.5</td></tr><td style='color:#2774AE'>Golden State Warriors</td><td style='color:#e21833'>Dallas Mavericks</td><td>10:00 PM</td><td>GS -2.5</td></tr><td style='color:#2774AE'>Portland Trail Blazers</td><td style='color:#2774AE'>Minnesota Timberwolves</td><td>10:00 PM</td><td>MIN -7.5</td></tr></tbody></table>
+<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#2774AE'>Orlando Magic</td><td style='color:#e21833'>Indiana Pacers</td><td>7:00 PM</td><td>IND -2.5</td></tr><td style='color:#2774AE'>Brooklyn Nets</td><td style='color:#e21833'>Boston Celtics</td><td>7:30 PM</td><td>BOS -8.5</td></tr><td style='color:#e21833'>New York Knicks</td><td style='color:#e21833'>Chicago Bulls</td><td>7:30 PM</td><td>NY -8.5</td></tr><td style='color:#57068c'>Philadelphia 76ers</td><td style='color:#e21833'>Cleveland Cavaliers</td><td>7:30 PM</td><td>CLE -8.5</td></tr><td style='color:#57068c'>Oklahoma City Thunder</td><td style='color:#e21833'>New Orleans Pelicans</td><td>7:30 PM</td><td>OKC -14.5</td></tr><td style='color:#2774AE'>Houston Rockets</td><td style='color:#2774AE'>LA Clippers</td><td>8:00 PM</td><td>HOU -4.5</td></tr><td style='color:#2774AE'>Milwaukee Bucks</td><td style='color:#57068c'>Detroit Pistons</td><td>8:00 PM</td><td>MIL -5.5</td></tr><td style='color:#57068c'>San Antonio Spurs</td><td style='color:#e21833'>Washington Wizards</td><td>8:00 PM</td><td>SA -8.5</td></tr><td style='color:#e21833'>Los Angeles Lakers</td><td style='color:#57068c'>Memphis Grizzlies</td><td>10:00 PM</td><td>LAL -6.5</td></tr><td style='color:#2774AE'>Portland Trail Blazers</td><td style='color:#2774AE'>Minnesota Timberwolves</td><td>10:00 PM</td><td>MIN -6.5</td></tr><td style='color:#57068c'>Sacramento Kings</td><td style='color:#2774AE'>Phoenix Suns</td><td>10:00 PM</td><td>SAC -7.5</td></tr></tbody></table>
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
 <div style="text-align: center;">
     <details>
         <summary><b>Who am I?</b></summary>
-        <p style="font-size:20px";><b>Elvin Hayes</b></p>
+        <p style="font-size:20px";><b>Damian Lillard</b></p>
     </details>
 </div>
-<p style="text-align: center;"><b>All-NBA Teams:</b> Baltimore Bullets, Capital Bullets, Washington Bullets</h2>
-<p style="text-align: center;"><b>All-NBA:</b> Between 1972–73 and 1978–79</p>
-<p style="text-align: center;"><b>Position:</b> Forward</p>
-<p style="text-align: center;"><b>Teams Made:</b> 6x</p>
+<p style="text-align: center;"><b>All-NBA Teams:</b> Portland Trail Blazers</h2>
+<p style="text-align: center;"><b>All-NBA:</b> Between 2013–14 and 2022–23</p>
+<p style="text-align: center;"><b>Position:</b> Guard</p>
+<p style="text-align: center;"><b>Teams Made:</b> 7x</p>
 
 </body>
 </html>
