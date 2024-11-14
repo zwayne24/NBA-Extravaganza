@@ -107,10 +107,10 @@ zachWins = zachsStandings['W'].sum()
 
 df = pd.read_excel('Wins_Over_Time.xlsx') 
 # add on to end of dataframe with todays data and wins
-todaysData = pd.DataFrame({'Day': date.today()-pd.Timedelta(days=1), 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})  
-df = pd.concat([df, todaysData], ignore_index=True)
+#todaysData = pd.DataFrame({'Day': date.today()-pd.Timedelta(days=1), 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})  
+#df = pd.concat([df, todaysData], ignore_index=True)
 # save to excel
-df.to_excel('Wins_Over_Time.xlsx', index=False)
+#df.to_excel('Wins_Over_Time.xlsx', index=False)
 df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
 # format dat as Oct-22
 df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
@@ -123,7 +123,7 @@ else:
 Teams = allNBA['Team_List'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 Pos = allNBA['Positions'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 
-url = 'https://www.espn.com/nba/schedule'
+url = 'https://www.espn.com/nba/schedule/_/date/20241113'
 headers = {
     'User-Agent': 'Mozilla/5.0'
 }
@@ -214,7 +214,6 @@ for i, row in yesterday_df.iterrows():
     
     for team in ChasesTeams:
         if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
-            print(row['home_team'], winner)
             if winner == row['home_team'] or (winner == 'Portland Trail' and row['home_team'] == 'Portland'):
                 # make background #2774AE and font white
                 html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
@@ -472,7 +471,9 @@ html_content = f"""
 <div id="chart-container">
     <canvas id="myLineChart"></canvas>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    console.log('Creating chart...');
     var ctx = document.getElementById('myLineChart').getContext('2d');
     
     const myLineChart = new Chart(ctx, {{
