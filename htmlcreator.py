@@ -132,8 +132,9 @@ soup = BeautifulSoup(response.text, 'html.parser')
 
 # Locate the schedule table
 matchups = []
-
+yesterday = []
 schedule_table = soup.find_all('div', class_='ScheduleTables')[1]
+yesterday_table = soup.find_all('div', class_='ScheduleTables')[0]
 
 if schedule_table:
     # Find each matchup row
@@ -158,6 +159,22 @@ if schedule_table:
             'home_team': home_team,
             'time': time,
             'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
+        })
+        
+if yesterday_table:
+    rows = yesterday_table.find_all('tr', class_='Table__TR--sm')
+    for row in rows:
+        # Extract team names
+        teams = row.find_all('a', class_='AnchorLink')
+        away_team = teams[1].text.strip() if teams else None
+        home_team = teams[3].text.strip() if len(teams) > 1 else None
+        result = teams[4].text.strip() if len(teams) > 1 else None
+        
+        yesterday.append({
+            'away_team': away_team,
+            'home_team': home_team,
+            'result': result,
+            'winner': result.split(' ')[0] if result else None,
         })
 
 # Create a DataFrame from the matchups list
@@ -186,6 +203,61 @@ for i, row in matchups_df.iterrows():
     html_table += f"<td>{row['time']}</td><td>{row['odds']}</td></tr>"
 html_table += "</tbody></table>"
 
+# Create a DataFrame from the matchups list
+yesterday_df = pd.DataFrame(yesterday)
+html_table_yesterday = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody>"
+for i, row in yesterday_df.iterrows():
+    # get full name of team from row['winner'] using teamToAbbr
+    for team in teamToAbbr:
+        if row['winner'] == teamToAbbr[team]:
+            winner = ' '.join(team.split(' ')[:-1])
+    
+    for team in ChasesTeams:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
+            print(row['home_team'], winner)
+            if winner == row['home_team'] or (winner == 'Portland Trail' and row['home_team'] == 'Portland'):
+                # make background #2774AE and font white
+                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+            else:
+                html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
+    for team in BrycesTeams:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['home_team']:
+                # make background #57068c and font white
+                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+            else:
+                html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
+    for team in ZachsTeams:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['home_team']:
+                # make background #e21833 and font white
+                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+            else:
+                html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"
+    for team in ChasesTeams:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
+            if winner == row['away_team'] or (winner == 'Portland Trail' and row['away_team'] == 'Portland'):
+                # make background #2774AE and font white
+                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+            else:
+                html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
+    for team in BrycesTeams:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['away_team']:
+                # make background #57068c and font white
+                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+            else:
+                html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
+    for team in ZachsTeams:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['away_team']:
+                # make background #e21833 and font white
+                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+            else:
+                html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"         
+    html_table_yesterday += f"<td>{row['result']}</td></tr>"
+html_table_yesterday += "</tbody></table>"
+
 # Generate HTML content
 html_content = f"""
 <!DOCTYPE html>
@@ -194,7 +266,28 @@ html_content = f"""
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Standings</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script >
+        function openCity(evt, cityName) {{
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {{
+            tabcontent[i].style.display = "none";
+        }}
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {{
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }}
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }}
+    </script>
     <style>
     /* Existing styles */
     body {{
@@ -315,6 +408,42 @@ html_content = f"""
         .table-container2 {{
             display: "block";
         }}
+    }}
+    
+        /* Style the tab */
+    .tab {{
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    text-align: center;
+    }}
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {{
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    }}
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {{
+    background-color: #ddd;
+    }}
+
+    /* Create an active/current tablink class */
+    .tab button.active {{
+    background-color: #ccc;
+    }}
+
+    /* Style the tab content */
+    .tabcontent {{
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
     }}
     
     @media screen and (min-width: 601px) {{
@@ -471,8 +600,22 @@ html_content = f"""
 </div>
 <hr/>
 
-<h2 style="text-align: center;">Today's Games</h2>
-{html_table}
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'TG')">Today's Games</button>
+  <button class="tablinks" onclick="openCity(event, 'YG')">Yesterday's Games</button>
+</div>
+
+
+<div id="TG" class="tabcontent">
+    <h2 style="text-align: center;">Today's Games</h2>
+    {html_table}
+</div>
+
+<div id="YG" class="tabcontent">
+  <h2 style="text-align: center;">Yesterday's Games</h2>
+  {html_table_yesterday}
+</div>
+
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
 <div style="text-align: center;">
