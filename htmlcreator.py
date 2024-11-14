@@ -107,10 +107,10 @@ zachWins = zachsStandings['W'].sum()
 
 df = pd.read_excel('Wins_Over_Time.xlsx') 
 # add on to end of dataframe with todays data and wins
-#todaysData = pd.DataFrame({'Day': date.today()-pd.Timedelta(days=1), 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})  
-#df = pd.concat([df, todaysData], ignore_index=True)
+todaysData = pd.DataFrame({'Day': date.today()-pd.Timedelta(days=1), 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})  
+df = pd.concat([df, todaysData], ignore_index=True)
 # save to excel
-#df.to_excel('Wins_Over_Time.xlsx', index=False)
+df.to_excel('Wins_Over_Time.xlsx', index=False)
 df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
 # format dat as Oct-22
 df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
@@ -123,7 +123,7 @@ else:
 Teams = allNBA['Team_List'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 Pos = allNBA['Positions'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 
-url = 'https://www.espn.com/nba/schedule/_/date/20241113'
+url = 'https://www.espn.com/nba/schedule/'
 headers = {
     'User-Agent': 'Mozilla/5.0'
 }
