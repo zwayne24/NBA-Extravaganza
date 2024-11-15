@@ -6,229 +6,205 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Standings</title>
     <script >
-      function openCity(evt, cityName) {
-      // Declare all variables
-      var i, tabcontent, tablinks;
+        function openCity(evt, cityName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
 
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
 
-      // Get all elements with class="tabcontent" and hide them
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-      }
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
 
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    </script>
+    <style>
+    /* Existing styles */
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-      // Get all elements with class="tablinks" and remove the class "active"
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
+    h1 {
+        text-align: center;
+        color: Green;
+        font-size: 60px;
+    }
 
+    table {
+        margin: 0 auto;
+        width: 50%;
+        border-collapse: collapse;
+    }
 
-      // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(cityName).style.display = "block";
-      evt.currentTarget.className += " active";
-  }
-  </script>
-  <style>
-  /* Existing styles */
-  body {
-      font-family: Arial, sans-serif;
-  }
+    th, td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
 
+    img {
+        display: block;
+        margin: 0 auto;
+    }
 
-  h1 {
-      text-align: center;
-      color: Green;
-      font-size: 60px;
-  }
+    .column {
+        float: left;
+        width: 33.33%;
+        text-align: center;
+    }
 
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 
-  table {
-      margin: 0 auto;
-      width: 50%;
-      border-collapse: collapse;
-  }
+    /* New styles */
+    .row {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
 
+    .column {
+        flex: 1;
+        padding: 15px;
+    }
 
-  th, td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid black;
-  }
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+        padding: 20px;
+        text-align: center;
+    }
 
+    .card-header {
+        margin-bottom: 15px;
+    }
 
-  img {
-      display: block;
-      margin: 0 auto;
-  }
+    .card-body h2 {
+        font-size: 24px;
+        color: #333;
+        margin: 10px 0;
+    }
 
+    .table-container {
+        margin-top: 15px;
+        overflow-x: auto;
+    }
+    
+    .table-container2 {
+        margin-top: 0px;
+        overflow-x: visible;
+        font-size: 12px;
+    }
 
-  .column {
-      float: left;
-      width: 33.33%;
-      text-align: center;
-  }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
+    table, th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
 
-  .row:after {
-      content: "";
-      display: table;
-      clear: both;
-  }
+    th {
+        background-color: #f2f2f2;
+        color: #333;
+        font-weight: bold;
+    }
 
+    td {
+        text-align: center;
+    }
+    
+    #myLineChart {
+        width: 100%;
+    }
+    
+    @media screen and (max-width: 600px) {
+        .column {
+            flex: 100%; /* Make each column take up full width */
+            padding: 0px;
+        }
+        
+        .table-container {
+            display: none;
+        }
+        
+        .table-container2 {
+            display: "block";
+        }
+    }
+    
+        /* Style the tab */
+    .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    text-align: center;
+    }
 
-  /* New styles */
-  .row {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-  }
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    }
 
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+    background-color: #ddd;
+    }
 
-  .column {
-      flex: 1;
-      padding: 15px;
-  }
+    /* Create an active/current tablink class */
+    .tab button.active {
+    background-color: #ccc;
+    }
 
-
-  .card {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      background-color: #f9f9f9;
-      padding: 20px;
-      text-align: center;
-  }
-
-
-  .card-header {
-      margin-bottom: 15px;
-  }
-
-
-  .card-body h2 {
-      font-size: 24px;
-      color: #333;
-      margin: 10px 0;
-  }
-
-
-  .table-container {
-      margin-top: 15px;
-      overflow-x: auto;
-  }
- 
-  .table-container2 {
-      margin-top: 0px;
-      overflow-x: visible;
-      font-size: 12px;
-  }
-
-
-  table {
-      width: 100%;
-      border-collapse: collapse;
-  }
-
-
-  table, th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-  }
-
-
-  th {
-      background-color: #f2f2f2;
-      color: #333;
-      font-weight: bold;
-  }
-
-
-  td {
-      text-align: center;
-  }
- 
-  #myLineChart {
-      width: 100%;
-  }
- 
-  @media screen and (max-width: 600px) {
-      .column {
-          flex: 100%; /* Make each column take up full width */
-          padding: 0px;
-      }
-     
-      .table-container {
-          display: none;
-      }
-     
-      .table-container2 {
-          display: "block";
-      }
-  }
- 
-      /* Style the tab */
-  .tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-  text-align: center;
-  }
-
-
-  /* Style the buttons that are used to open the tab content */
-  .tab button {
-  background-color: inherit;
-  border: #1c1b1b;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  }
-
-
-  /* Change background color of buttons on hover */
-  .tab button:hover {
-  background-color: #ddd;
-  }
-
-
-  /* Create an active/current tablink class */
-  .tab button.active {
-  background-color: #ccc;
-  }
-
-
-  /* Style the tab content */
-  .tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-  }
- 
-  @media screen and (min-width: 601px) {
-      .table-container2 {
-          display: none;
-      }
-      #chart-container {
-          display: none;
-      }
-  }
- 
-  ch {
-      text-decoration: underline;
-      -webkit-text-decoration-color: red; /* safari still uses vendor prefix */
-      text-decoration-color: red;
-      font-size: 24px;
-      font-weight:bold;
-  }
-
+    /* Style the tab content */
+    .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    }
+    
+    @media screen and (min-width: 601px) {
+        .table-container2 {
+            display: none;
+        }
+        #chart-container {
+            display: none;
+        }
+    }
+    
+    ch {
+        text-decoration: underline;
+        -webkit-text-decoration-color: red; /* safari still uses vendor prefix */
+        text-decoration-color: red;
+        font-size: 24px;
+        font-weight:bold;
+    }
 
 </style>
-</head>
 
+</head>
 <body>
 
 <h1>NBA Extravaganza</h1>
@@ -237,15 +213,16 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    console.log('Creating chart...');
     var ctx = document.getElementById('myLineChart').getContext('2d');
     
     const myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Oct-21', 'Oct-22', 'Oct-23', 'Oct-24', 'Oct-25', 'Oct-26', 'Oct-27', 'Oct-28', 'Oct-29', 'Oct-30', 'Oct-31', 'Nov-01', 'Nov-02', 'Nov-03', 'Nov-04', 'Nov-05', 'Nov-06', 'Nov-07', 'Nov-08', 'Nov-09', 'Nov-10', 'Nov-11', 'Nov-12', 'Nov-13'],
+            labels: ['Oct-21', 'Oct-22', 'Oct-23', 'Oct-24', 'Oct-25', 'Oct-26', 'Oct-27', 'Oct-28', 'Oct-29', 'Oct-30', 'Oct-31', 'Nov-01', 'Nov-02', 'Nov-03', 'Nov-04', 'Nov-05', 'Nov-06', 'Nov-07', 'Nov-08', 'Nov-09', 'Nov-10', 'Nov-11', 'Nov-12', 'Nov-13', 'Nov-14'],
             datasets: [{
                 label: 'Chase',
-                data: [0, 0, 2, 2, 3, 4, 5, 7, 6, 7, 7, 7, 5, 3, 5, 5, 5, 6, 6, 6, 6, 6, 9, 10],
+                data: [0, 0, 2, 2, 3, 4, 5, 7, 6, 7, 7, 7, 5, 3, 5, 5, 5, 6, 6, 6, 6, 6, 9, 10, 9],
                 fill: false,
                 borderColor: '#2774AE',
                 tension: 0.1,
@@ -253,7 +230,7 @@
             },
             {
                 label: 'Bryce',
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 fill: false,
                 borderColor: '#57068c',
                 tension: 0.1,
@@ -261,7 +238,7 @@
             },
             {
                 label: 'Zach',
-                data: [0, 2, 4, 5, 8, 8, 6, 9, 8, 12, 10, 13, 10, 9, 7, 7, 7, 6, 7, 8, 7, 6, 5, 6],
+                data: [0, 2, 4, 5, 8, 8, 6, 9, 8, 12, 10, 13, 10, 9, 7, 7, 7, 6, 7, 8, 7, 6, 5, 6, 5],
                 fill: false,
                 borderColor: '#e21833',
                 tension: 0.1,
@@ -357,14 +334,14 @@
       <td>6</td>
     </tr>
     <tr>
-      <td>Brooklyn Nets</td>
-      <td>5</td>
-      <td>7</td>
-    </tr>
-    <tr>
       <td>Portland Trail Blazers</td>
       <td>5</td>
       <td>8</td>
+    </tr>
+    <tr>
+      <td>Brooklyn Nets</td>
+      <td>5</td>
+      <td>7</td>
     </tr>
     <tr>
       <td>Miami Heat</td>
@@ -413,11 +390,11 @@
       <td>6</td>
     </tr>
     <tr>
-      <td>BKN</td>
+      <td>POR</td>
       <td>5</td>
     </tr>
     <tr>
-      <td>POR</td>
+      <td>BKN</td>
       <td>5</td>
     </tr>
     <tr>
@@ -442,7 +419,7 @@
             </div>
             <hr color="#57068c">
             <div class="card-body">
-                <h2>Bryce's Wins: 53</h2>
+                <h2>Bryce's Wins: 54</h2>
                 <div class="table-container">
                     <table border="1" class="dataframe">
   <thead>
@@ -479,24 +456,24 @@
       <td>6</td>
     </tr>
     <tr>
-      <td>Detroit Pistons</td>
-      <td>5</td>
-      <td>8</td>
-    </tr>
-    <tr>
       <td>Atlanta Hawks</td>
       <td>5</td>
       <td>7</td>
     </tr>
     <tr>
-      <td>Philadelphia 76ers</td>
-      <td>2</td>
-      <td>9</td>
+      <td>Detroit Pistons</td>
+      <td>5</td>
+      <td>8</td>
     </tr>
     <tr>
       <td>Utah Jazz</td>
-      <td>2</td>
+      <td>3</td>
       <td>8</td>
+    </tr>
+    <tr>
+      <td>Philadelphia 76ers</td>
+      <td>2</td>
+      <td>9</td>
     </tr>
     <tr>
       <td>Toronto Raptors</td>
@@ -536,19 +513,19 @@
       <td>6</td>
     </tr>
     <tr>
-      <td>DET</td>
-      <td>5</td>
-    </tr>
-    <tr>
       <td>ATL</td>
       <td>5</td>
     </tr>
     <tr>
-      <td>PHI</td>
-      <td>2</td>
+      <td>DET</td>
+      <td>5</td>
     </tr>
     <tr>
-      <td>UTA</td>
+      <td>UTAH</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>PHI</td>
       <td>2</td>
     </tr>
     <tr>
@@ -596,14 +573,14 @@
       <td>4</td>
     </tr>
     <tr>
-      <td>Chicago Bulls</td>
+      <td>Dallas Mavericks</td>
       <td>5</td>
       <td>7</td>
     </tr>
     <tr>
-      <td>Dallas Mavericks</td>
+      <td>Chicago Bulls</td>
       <td>5</td>
-      <td>6</td>
+      <td>7</td>
     </tr>
     <tr>
       <td>New York Knicks</td>
@@ -655,11 +632,11 @@
       <td>7</td>
     </tr>
     <tr>
-      <td>CHI</td>
+      <td>DAL</td>
       <td>5</td>
     </tr>
     <tr>
-      <td>DAL</td>
+      <td>CHI</td>
       <td>5</td>
     </tr>
     <tr>
@@ -694,30 +671,30 @@
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'TG')">Today's Games</button>
   <button class="tablinks" onclick="openCity(event, 'YG')">Yesterday's Games</button>
- </div>
- 
- <div id="TG" class="tabcontent">
+</div>
+
+
+<div id="TG" class="tabcontent">
     <h2 style="text-align: center;">Today's Games</h2>
-    <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#57068c'>Utah Jazz</td><td style='color:#e21833'>Dallas Mavericks</td><td>9:00 PM</td><td>DAL -8.5</td></tr></tbody></table>
- </div>
- 
- 
- <div id="YG" class="tabcontent">
+    <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#e21833'>Indiana Pacers</td><td style='color:#2774AE'>Miami Heat</td><td>7:00 PM</td><td>IND -4.5</td></tr><td style='color:#2774AE'>Orlando Magic</td><td style='color:#57068c'>Philadelphia 76ers</td><td>7:00 PM</td><td>ORL -1.5</td></tr><td style='color:#57068c'>Toronto Raptors</td><td style='color:#57068c'>Detroit Pistons</td><td>7:00 PM</td><td>DET -1.5</td></tr><td style='color:#57068c'>Atlanta Hawks</td><td style='color:#e21833'>Washington Wizards</td><td>7:30 PM</td><td>ATL -8.5</td></tr><td style='color:#e21833'>Cleveland Cavaliers</td><td style='color:#e21833'>Chicago Bulls</td><td>7:30 PM</td><td>CLE -10.5</td></tr><td style='color:#e21833'>New York Knicks</td><td style='color:#2774AE'>Brooklyn Nets</td><td>7:30 PM</td><td>NY -9.5</td></tr><td style='color:#57068c'>San Antonio Spurs</td><td style='color:#e21833'>Los Angeles Lakers</td><td>7:30 PM</td><td>LAL -3.5</td></tr><td style='color:#2774AE'>Houston Rockets</td><td style='color:#2774AE'>LA Clippers</td><td>8:00 PM</td><td>HOU -4.5</td></tr><td style='color:#e21833'>New Orleans Pelicans</td><td style='color:#57068c'>Denver Nuggets</td><td>8:00 PM</td><td>DEN -4.5</td></tr><td style='color:#57068c'>Oklahoma City Thunder</td><td style='color:#2774AE'>Phoenix Suns</td><td>8:00 PM</td><td>OKC -7.5</td></tr><td style='color:#2774AE'>Golden State Warriors</td><td style='color:#57068c'>Memphis Grizzlies</td><td>10:00 PM</td><td>GS -8.5</td></tr><td style='color:#57068c'>Sacramento Kings</td><td style='color:#2774AE'>Minnesota Timberwolves</td><td>10:00 PM</td><td>MIN -1.5</td></tr></tbody></table>
+</div>
+
+<div id="YG" class="tabcontent">
   <h2 style="text-align: center;">Yesterday's Games</h2>
-  <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody><td style='background-color:#2774AE;color:white;'> <strong>ORL</strong></td><td style='color:#e21833'>IND</td><td>ORL 94, IND 90</td></tr><td style='color:#2774AE'>BKN</td><td style='background-color:#e21833;color:white;'> <strong>BOS</strong></td><td>BOS 139, BKN 114</td></tr><td style='color:#e21833'>NY</td><td style='background-color:#e21833;color:white;'> <strong>CHI</strong></td><td>CHI 124, NY 123</td></tr><td style='color:#57068c'>PHI</td><td style='background-color:#e21833;color:white;'> <strong>CLE</strong></td><td>CLE 114, PHI 106</td></tr><td style='background-color:#57068c;color:white;'> <strong>OKC</strong></td><td style='color:#e21833'>NO</td><td>OKC 106, NO 88</td></tr><td style='background-color:#2774AE;color:white;'> <strong>HOU</strong></td><td style='color:#2774AE'>LAC</td><td>HOU 111, LAC 103</td></tr><td style='background-color:#2774AE;color:white;'> <strong>MIL</strong></td><td style='color:#57068c'>DET</td><td>MIL 127, DET 120 (OT)</td></tr><td style='background-color:#57068c;color:white;'> <strong>SA</strong></td><td style='color:#e21833'>WAS</td><td>SA 139, WSH 130</td></tr><td style='background-color:#e21833;color:white;'> <strong>LAL</strong></td><td style='color:#57068c'>MEM</td><td>LAL 128, MEM 123</td></tr><td style='background-color:#2774AE;color:white;'> <strong>POR</strong></td><td style='color:#2774AE'>MIN</td><td>POR 106, MIN 98</td></tr><td style='background-color:#57068c;color:white;'> <strong>SAC</strong></td><td style='color:#2774AE'>PHX</td><td>SAC 127, PHX 104</td></tr></tbody></table>
- </div>
- 
+  <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody><td style='background-color:#57068c;color:white;'> <strong>UTAH</strong></td><td style='color:#e21833'>DAL</td><td>UTAH 115, DAL 113</td></tr></tbody></table>
+</div>
+
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
 <div style="text-align: center;">
     <details>
         <summary><b>Who am I?</b></summary>
-        <p style="font-size:20px";><b>Truck Robinson</b></p>
+        <p style="font-size:20px";><b>Gail Goodrich</b></p>
     </details>
 </div>
-<p style="text-align: center;"><b>All-NBA Teams:</b> New Orleans Jazz</h2>
-<p style="text-align: center;"><b>All-NBA:</b> 1977–78</p>
-<p style="text-align: center;"><b>Position:</b> Forward</p>
+<p style="text-align: center;"><b>All-NBA Teams:</b> Los Angeles Lakers</h2>
+<p style="text-align: center;"><b>All-NBA:</b> 1973–74</p>
+<p style="text-align: center;"><b>Position:</b> Guard</p>
 <p style="text-align: center;"><b>Teams Made:</b> 1x</p>
 
 </body>
