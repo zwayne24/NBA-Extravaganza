@@ -567,7 +567,7 @@ html_content = f"""
     <div class="column">
         <div class="card">
             <div class="card-header">
-                {img_to_html('photos/BryceHeadcopy.png')}
+                {img_to_html('photos/Trash5.png')}
             </div>
             <hr color="#57068c">
             <div class="card-body">
