@@ -170,12 +170,14 @@ if yesterday_table:
         home_team = teams[3].text.strip() if len(teams) > 1 else None
         result = teams[4].text.strip() if len(teams) > 1 else None
         
-        yesterday.append({
-            'away_team': away_team,
-            'home_team': home_team,
-            'result': result,
-            'winner': result.split(' ')[0] if result else None,
-        })
+        if result != "Postponed":
+            result = None       
+            yesterday.append({
+                'away_team': away_team,
+                'home_team': home_team,
+                'result': result,
+                'winner': result.split(' ')[0] if result else None,
+            })
 
 # Create a DataFrame from the matchups list
 matchups_df = pd.DataFrame(matchups)
