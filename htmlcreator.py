@@ -123,141 +123,141 @@ else:
 Teams = allNBA['Team_List'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 Pos = allNBA['Positions'].values[0].replace('[', '').replace(']', '').replace('\'', '')
 
-url = 'https://www.espn.com/nba/schedule/'
-headers = {
-    'User-Agent': 'Mozilla/5.0'
-}
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.text, 'html.parser')
+# url = 'https://www.espn.com/nba/schedule/'
+# headers = {
+#     'User-Agent': 'Mozilla/5.0'
+# }
+# response = requests.get(url, headers=headers)
+# soup = BeautifulSoup(response.text, 'html.parser')
 
-# Locate the schedule table
-matchups = []
-yesterday = []
-schedule_table = soup.find_all('div', class_='ScheduleTables')[1]
-yesterday_table = soup.find_all('div', class_='ScheduleTables')[0]
+# # Locate the schedule table
+# matchups = []
+# yesterday = []
+# schedule_table = soup.find_all('div', class_='ScheduleTables')[1]
+# yesterday_table = soup.find_all('div', class_='ScheduleTables')[0]
 
-if schedule_table:
-    # Find each matchup row
-    rows = schedule_table.find_all('tr', class_='Table__TR--sm')
+# if schedule_table:
+#     # Find each matchup row
+#     rows = schedule_table.find_all('tr', class_='Table__TR--sm')
 
-    for row in rows:
-        # Extract team names
-        teams = row.find_all('a', class_='AnchorLink')
-        away_team = teams[1].text.strip() if teams else None
-        home_team = teams[3].text.strip() if len(teams) > 1 else None
+#     for row in rows:
+#         # Extract team names
+#         teams = row.find_all('a', class_='AnchorLink')
+#         away_team = teams[1].text.strip() if teams else None
+#         home_team = teams[3].text.strip() if len(teams) > 1 else None
         
-        # Extract time
-        time = row.find('td', class_='date__col').text.strip() if row.find('td', class_='date__col') else None
+#         # Extract time
+#         time = row.find('td', class_='date__col').text.strip() if row.find('td', class_='date__col') else None
         
-        # Extract odds (e.g., point spread)
-        odds_info = row.find('div', class_='Odds__Message')
-        odds = odds_info.text.strip() if odds_info else None
+#         # Extract odds (e.g., point spread)
+#         odds_info = row.find('div', class_='Odds__Message')
+#         odds = odds_info.text.strip() if odds_info else None
 
-        # Store each matchup as a dictionary
-        matchups.append({
-            'away_team': away_team,
-            'home_team': home_team,
-            'time': time,
-            'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
-        })
+#         # Store each matchup as a dictionary
+#         matchups.append({
+#             'away_team': away_team,
+#             'home_team': home_team,
+#             'time': time,
+#             'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
+#         })
         
-if yesterday_table:
-    rows = yesterday_table.find_all('tr', class_='Table__TR--sm')
-    for row in rows:
-        # Extract team names
-        teams = row.find_all('a', class_='AnchorLink')
-        away_team = teams[1].text.strip() if teams else None
-        home_team = teams[3].text.strip() if len(teams) > 1 else None
-        result = teams[4].text.strip() if len(teams) > 1 else None
+# if yesterday_table:
+#     rows = yesterday_table.find_all('tr', class_='Table__TR--sm')
+#     for row in rows:
+#         # Extract team names
+#         teams = row.find_all('a', class_='AnchorLink')
+#         away_team = teams[1].text.strip() if teams else None
+#         home_team = teams[3].text.strip() if len(teams) > 1 else None
+#         result = teams[4].text.strip() if len(teams) > 1 else None
         
-        if result != "Postponed":
-            yesterday.append({
-                'away_team': away_team,
-                'home_team': home_team,
-                'result': result,
-                'winner': result.split(' ')[0] if result else None,
-            })
+#         if result != "Postponed":
+#             yesterday.append({
+#                 'away_team': away_team,
+#                 'home_team': home_team,
+#                 'result': result,
+#                 'winner': result.split(' ')[0] if result else None,
+#             })
 
-# Create a DataFrame from the matchups list
-matchups_df = pd.DataFrame(matchups)
-html_table = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody>"
-for i, row in matchups_df.iterrows():
-    # if row['Home Team'] = ChasesTeams first row
-    for team in ChasesTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
-            html_table += f"<td style='color:#2774AE'>{team}</td>"
-    for team in BrycesTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
-            html_table += f"<td style='color:#57068c'>{team}</td>"
-    for team in ZachsTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
-            html_table += f"<td style='color:#e21833'>{team}</td>"
-    for team in ChasesTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
-            html_table += f"<td style='color:#2774AE'>{team}</td>"
-    for team in BrycesTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
-            html_table += f"<td style='color:#57068c'>{team}</td>"
-    for team in ZachsTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
-            html_table += f"<td style='color:#e21833'>{team}</td>"
-    html_table += f"<td>{row['time']}</td><td>{row['odds']}</td></tr>"
-html_table += "</tbody></table>"
+# # Create a DataFrame from the matchups list
+# matchups_df = pd.DataFrame(matchups)
+# html_table = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody>"
+# for i, row in matchups_df.iterrows():
+#     # if row['Home Team'] = ChasesTeams first row
+#     for team in ChasesTeams:
+#         if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
+#             html_table += f"<td style='color:#2774AE'>{team}</td>"
+#     for team in BrycesTeams:
+#         if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+#             html_table += f"<td style='color:#57068c'>{team}</td>"
+#     for team in ZachsTeams:
+#         if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+#             html_table += f"<td style='color:#e21833'>{team}</td>"
+#     for team in ChasesTeams:
+#         if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
+#             html_table += f"<td style='color:#2774AE'>{team}</td>"
+#     for team in BrycesTeams:
+#         if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+#             html_table += f"<td style='color:#57068c'>{team}</td>"
+#     for team in ZachsTeams:
+#         if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+#             html_table += f"<td style='color:#e21833'>{team}</td>"
+#     html_table += f"<td>{row['time']}</td><td>{row['odds']}</td></tr>"
+# html_table += "</tbody></table>"
 
-# Create a DataFrame from the matchups list
-yesterday_df = pd.DataFrame(yesterday)
-html_table_yesterday = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody>"
-for i, row in yesterday_df.iterrows():
-    print(row)
-    # get full name of team from row['winner'] using teamToAbbr
-    for team in teamToAbbr:
-        if row['winner'] == teamToAbbr[team]:
-            winner = ' '.join(team.split(' ')[:-1])
+# # Create a DataFrame from the matchups list
+# yesterday_df = pd.DataFrame(yesterday)
+# html_table_yesterday = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody>"
+# for i, row in yesterday_df.iterrows():
+#     print(row)
+#     # get full name of team from row['winner'] using teamToAbbr
+#     for team in teamToAbbr:
+#         if row['winner'] == teamToAbbr[team]:
+#             winner = ' '.join(team.split(' ')[:-1])
     
-    for team in ChasesTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
-            if winner == row['home_team'] or (winner == 'Portland Trail' and row['home_team'] == 'Portland'):
-                # make background #2774AE and font white
-                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
-            else:
-                html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
-    for team in BrycesTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
-            if winner == row['home_team']:
-                # make background #57068c and font white
-                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
-            else:
-                html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
-    for team in ZachsTeams:
-        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
-            if winner == row['home_team']:
-                # make background #e21833 and font white
-                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
-            else:
-                html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"
-    for team in ChasesTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
-            if winner == row['away_team'] or (winner == 'Portland Trail' and row['away_team'] == 'Portland'):
-                # make background #2774AE and font white
-                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
-            else:
-                html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
-    for team in BrycesTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
-            if winner == row['away_team']:
-                # make background #57068c and font white
-                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
-            else:
-                html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
-    for team in ZachsTeams:
-        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
-            if winner == row['away_team']:
-                # make background #e21833 and font white
-                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
-            else:
-                html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"         
-    html_table_yesterday += f"<td>{row['result']}</td></tr>"
-html_table_yesterday += "</tbody></table>"
+#     for team in ChasesTeams:
+#         if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
+#             if winner == row['home_team'] or (winner == 'Portland Trail' and row['home_team'] == 'Portland'):
+#                 # make background #2774AE and font white
+#                 html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+#             else:
+#                 html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
+#     for team in BrycesTeams:
+#         if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+#             if winner == row['home_team']:
+#                 # make background #57068c and font white
+#                 html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+#             else:
+#                 html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
+#     for team in ZachsTeams:
+#         if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+#             if winner == row['home_team']:
+#                 # make background #e21833 and font white
+#                 html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+#             else:
+#                 html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"
+#     for team in ChasesTeams:
+#         if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
+#             if winner == row['away_team'] or (winner == 'Portland Trail' and row['away_team'] == 'Portland'):
+#                 # make background #2774AE and font white
+#                 html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+#             else:
+#                 html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
+#     for team in BrycesTeams:
+#         if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+#             if winner == row['away_team']:
+#                 # make background #57068c and font white
+#                 html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+#             else:
+#                 html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
+#     for team in ZachsTeams:
+#         if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+#             if winner == row['away_team']:
+#                 # make background #e21833 and font white
+#                 html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
+#             else:
+#                 html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"         
+#     html_table_yesterday += f"<td>{row['result']}</td></tr>"
+# html_table_yesterday += "</tbody></table>"
 
 # Generate HTML content
 html_content = f"""
@@ -602,23 +602,6 @@ html_content = f"""
     </div>
 </div>
 <hr/>
-
-<div class="tab">
-  <button class="tablinks" onclick="openCity(event, 'TG')">Today's Games</button>
-  <button class="tablinks" onclick="openCity(event, 'YG')">Yesterday's Games</button>
-</div>
-
-
-<div id="TG" class="tabcontent">
-    <h2 style="text-align: center;">Today's Games</h2>
-    {html_table}
-</div>
-
-<div id="YG" class="tabcontent">
-  <h2 style="text-align: center;">Yesterday's Games</h2>
-  {html_table_yesterday}
-</div>
-
 
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
 <div style="text-align: center;">
