@@ -603,6 +603,22 @@ html_content = f"""
 </div>
 <hr/>
 
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'TG')">Today's Games</button>
+  <button class="tablinks" onclick="openCity(event, 'YG')">Yesterday's Games</button>
+</div>
+
+
+<div id="TG" class="tabcontent">
+    <h2 style="text-align: center;">Today's Games</h2>
+    {html_table}
+</div>
+
+<div id="YG" class="tabcontent">
+  <h2 style="text-align: center;">Yesterday's Games</h2>
+  {html_table_yesterday}
+</div>
+
 <h2 style="text-align: center;">All-NBA Player of the Day</h2>
 <div style="text-align: center;">
     <details>
