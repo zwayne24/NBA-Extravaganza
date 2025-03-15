@@ -396,6 +396,22 @@ html_content = f"""
         width: 100%;
     }}
     
+    .progress-container {{
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            position: relative;
+    }}
+
+    .progress-bar {{
+        height: 30px;
+        background-color: #4CAF50;
+        text-align: center;
+        color: black;
+        line-height: 30px;
+        border-radius: 5px;
+    }}
+    
     @media screen and (max-width: 600px) {{
         .column {{
             flex: 100%; /* Make each column take up full width */
@@ -468,6 +484,20 @@ html_content = f"""
 
 </head>
 <body>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0/0</div>
+    </div>
+
+    <script>
+        let x = {chaseWins+bryceWins+zachWins}
+        let y = {30*41}
+        let percentage = ((x / y) * 100).toFixed(1);
+
+        let progressBar = document.getElementById("progressBar");
+        progressBar.style.width = percentage + "%";
+        progressBar.innerText = percentage+ "%";
+    </script>
 
 <h1>NBA Extravaganza</h1>
 <div id="chart-container">
