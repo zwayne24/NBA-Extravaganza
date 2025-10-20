@@ -1,13 +1,3 @@
-"""
-HTML Creator Script with Daily Guessing Game Feature
-"""
-
-# === Original Imports ===
-import pandas as pd
-from datetime import date
-import datetime
-
-# === Original HTML Creation Logic ===
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -27,84 +17,54 @@ def img_to_html(img_path):
     )
     return img_html
 
-def scrape_nba_standings(url="https://www.espn.com/nba/standings"):
-    """
-    Scrape NBA standings from ESPN
-    Returns a DataFrame with team name, wins, losses, and winning percentage
-    """
-    # Send GET request
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    
-    # Parse HTML
-    soup = BeautifulSoup(response.content, 'html.parser')
-    
-    all_teams = []
-    
-    # Find all ResponsiveTable divs (one for Eastern Conference, one for Western Conference)
-    responsive_tables = soup.find_all('div', class_='ResponsiveTable')
-    
-    for responsive_table in responsive_tables:
-        # Find the fixed-left table (contains team names)
-        team_table = responsive_table.find('table', class_='Table--fixed-left')
-        # Find the scrollable table (contains stats)
-        stats_table = responsive_table.find('div', class_='Table__Scroller')
-        
-        if not team_table or not stats_table:
-            continue
-            
-        stats_table = stats_table.find('table')
-        
-        # Get team rows
-        team_rows = team_table.find('tbody').find_all('tr')
-        # Get stat rows
-        stat_rows = stats_table.find('tbody').find_all('tr')
-        
-        # Match team rows with stat rows (they should be in the same order)
-        for team_row, stat_row in zip(team_rows, stat_rows):
-            try:
-                # Extract team name from the team table
-                team_link = team_row.find('span', class_='hide-mobile')
-                if team_link:
-                    team_name = team_link.get_text(strip=True)
-                else:
-                    # Try mobile version
-                    team_abbr = team_row.find('abbr')
-                    if team_abbr:
-                        team_name = team_abbr.get_text(strip=True)
-                    else:
-                        continue
-                
-                # Extract stats from the stats table
-                stat_cells = stat_row.find_all('span', class_='stat-cell')
-                
-                if len(stat_cells) >= 3:
-                    wins = stat_cells[0].get_text(strip=True)
-                    losses = stat_cells[1].get_text(strip=True)
-                    pct = stat_cells[2].get_text(strip=True)
-                    
-                    all_teams.append({
-                        'Team': team_name,
-                        'W': wins,
-                        'L': losses,
-                        'PCT': pct
-                    })
-            except (IndexError, AttributeError) as e:
-                print(f"Error processing row: {e}")
-                continue
-    
-    # Create DataFrame
-    df = pd.DataFrame(all_teams)
-    return df
+# Scrape standings from ESPN
+url = 'https://www.espn.com/nba/standings/_/group/league'
+headers = {
+    'User-Agent': 'Mozilla/5.0'
+}
+response = requests.get(url, headers=headers)
+soup = BeautifulSoup(response.text, 'html.parser')
 
-standings = scrape_nba_standings()
+standings = pd.DataFrame(columns=['Team', 'W', 'L', 'PCT'])
 
-ChasesTeams = ['Denver Nuggets','New York Knicks','Golden State Warriors','LA Clippers','Dallas Mavericks','Boston Celtics','Miami Heat','Sacramento Kings','Phoenix Suns','Brooklyn Nets']
-BrycesTeams = ['Oklahoma City Thunder','Orlando Magic','Minnesota Timberwolves','Atlanta Hawks','San Antonio Spurs','Memphis Grizzlies','Indiana Pacers','Chicago Bulls','Portland Trail Blazers','Utah Jazz']
-ZachsTeams = ['Cleveland Cavaliers','Houston Rockets','Los Angeles Lakers','Detroit Pistons','Milwaukee Bucks','Philadelphia 76ers','Toronto Raptors','New Orleans Pelicans','Charlotte Hornets','Washington Wizards']
+i = 0
+team_name_list = []
+for team in soup.find_all('tr', class_='Table__TR Table__TR--sm Table__even'):
+    if i < 15:
+        team_name = team.find('span', class_='hide-mobile').text
+        team_name_list.append(team_name)
+    if i >= 15 and i < 30:
+        wins = team.find('span', class_='stat-cell').text
+        losses = team.find_all('span', class_='stat-cell')[1].text
+        pct = team.find_all('span', class_='stat-cell')[2].text
+        new_row = pd.DataFrame([{'Team': team_name_list[i-15], 'W': wins, 'L': losses, 'PCT': pct}])
+        standings = pd.concat([standings, new_row], ignore_index=True)
+    i += 1
+
+# Continue with the data extraction...
+i = 0
+for team in soup.find_all('tr', class_='filled Table__TR Table__TR--sm Table__even'):
+    if i < 15:
+        team_name = team.find('span', class_='hide-mobile').text
+        team_name_list.append(team_name)
+    if i >= 15 and i < 30:
+        wins = team.find('span', class_='stat-cell').text
+        losses = team.find_all('span', class_='stat-cell')[1].text
+        pct = team.find_all('span', class_='stat-cell')[2].text
+        new_row = pd.DataFrame([{'Team': team_name_list[i], 'W': wins, 'L': losses, 'PCT': pct}])
+        standings = pd.concat([standings, new_row], ignore_index=True)
+    i += 1
+
+# Read All-NBA data from CSV
+allNBAs = pd.read_csv('allNBARemaining.csv')
+allNBA = allNBAs.sample()
+allNBAs = allNBAs.drop(allNBA.index)
+allNBAs.to_csv('allNBARemaining.csv', index=False)
+
+# Define team lists for Chase, Bryce, and Zach
+ChasesTeams = ['Minnesota Timberwolves', 'Milwaukee Bucks', 'Phoenix Suns', 'Orlando Magic', 'Miami Heat', 'Golden State Warriors', 'Houston Rockets', 'LA Clippers', 'Portland Trail Blazers', 'Brooklyn Nets']
+BrycesTeams = ['Oklahoma City Thunder', 'Denver Nuggets', 'Philadelphia 76ers', 'Sacramento Kings', 'Memphis Grizzlies', 'San Antonio Spurs', 'Toronto Raptors', 'Atlanta Hawks', 'Utah Jazz', 'Detroit Pistons']
+ZachsTeams = ['Boston Celtics', 'Dallas Mavericks', 'New York Knicks', 'Indiana Pacers', 'Cleveland Cavaliers', 'New Orleans Pelicans', 'Los Angeles Lakers', 'Chicago Bulls', 'Charlotte Hornets', 'Washington Wizards']
 
 # Process standings data
 standings['W'] = standings['W'].astype(int)
@@ -155,7 +115,15 @@ df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
 # format dat as Oct-22
 df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
 
-url = 'https://www.espn.com/nba/schedule'
+if allNBA['Last_Season'].values[0] == allNBA['First_Season'].values[0]:
+    Years = allNBA['First_Season'].values[0]
+else:
+    Years = "Between "+allNBA['First_Season'].values[0] + ' and ' + allNBA['Last_Season'].values[0]
+    
+Teams = allNBA['Team_List'].values[0].replace('[', '').replace(']', '').replace('\'', '')
+Pos = allNBA['Positions'].values[0].replace('[', '').replace(']', '').replace('\'', '')
+
+url = 'https://www.espn.com/nba/schedule/'
 headers = {
     'User-Agent': 'Mozilla/5.0'
 }
@@ -175,8 +143,9 @@ if schedule_table:
     for row in rows:
         # Extract team names
         teams = row.find_all('a', class_='AnchorLink')
-        away_team = teams[1]['href'].split('/')[-2] if teams else None
-        home_team = teams[3]['href'].split('/')[-2] if len(teams) > 1 else None
+        away_team = teams[1].text.strip() if teams else None
+        home_team = teams[3].text.strip() if len(teams) > 1 else None
+        
         # Extract time
         time = row.find('td', class_='date__col').text.strip() if row.find('td', class_='date__col') else None
         
@@ -191,14 +160,14 @@ if schedule_table:
             'time': time,
             'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
         })
-                
+        
 if yesterday_table:
     rows = yesterday_table.find_all('tr', class_='Table__TR--sm')
     for row in rows:
         # Extract team names
         teams = row.find_all('a', class_='AnchorLink')
-        away_team = teams[1]['href'].split('/')[-2] if teams else None
-        home_team = teams[3]['href'].split('/')[-2] if len(teams) > 1 else None
+        away_team = teams[1].text.strip() if teams else None
+        home_team = teams[3].text.strip() if len(teams) > 1 else None
         result = teams[4].text.strip() if len(teams) > 1 else None
         
         if result != "Postponed":
@@ -215,28 +184,22 @@ html_table = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th
 for i, row in matchups_df.iterrows():
     # if row['Home Team'] = ChasesTeams first row
     for team in ChasesTeams:
-        team = teamToAbbr[team]
-        if row['home_team'] == team.lower():
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
             html_table += f"<td style='color:#2774AE'>{team}</td>"
     for team in BrycesTeams:
-        team = teamToAbbr[team]
-        if row['home_team'] == team.lower():
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
             html_table += f"<td style='color:#57068c'>{team}</td>"
     for team in ZachsTeams:
-        team = teamToAbbr[team]
-        if row['home_team'] == team.lower():
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
             html_table += f"<td style='color:#e21833'>{team}</td>"
     for team in ChasesTeams:
-        team = teamToAbbr[team]
-        if row['away_team'] == team.lower():
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
             html_table += f"<td style='color:#2774AE'>{team}</td>"
     for team in BrycesTeams:
-        team = teamToAbbr[team]
-        if row['away_team'] == team.lower():
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
             html_table += f"<td style='color:#57068c'>{team}</td>"
     for team in ZachsTeams:
-        team = teamToAbbr[team]
-        if row['away_team'] == team.lower():
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
             html_table += f"<td style='color:#e21833'>{team}</td>"
     html_table += f"<td>{row['time']}</td><td>{row['odds']}</td></tr>"
 html_table += "</tbody></table>"
@@ -245,55 +208,54 @@ html_table += "</tbody></table>"
 yesterday_df = pd.DataFrame(yesterday)
 html_table_yesterday = "<table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody>"
 for i, row in yesterday_df.iterrows():
-    winner = row['winner']  
+    print(row)
+    # get full name of team from row['winner'] using teamToAbbr
+    for team in teamToAbbr:
+        if row['winner'] == teamToAbbr[team]:
+            winner = ' '.join(team.split(' ')[:-1])
+    
     for team in ChasesTeams:
-        team = teamToAbbr[team]
-        if row['home_team'] == team.lower():
-            if winner.lower() == row['home_team']:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]) or (row['home_team'] == team.split(' ')[0] and row['home_team'] == 'Portland'):
+            if winner == row['home_team'] or (winner == 'Portland Trail' and row['home_team'] == 'Portland'):
                 # make background #2774AE and font white
-                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{team}</strong></td>"
+                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
             else:
-                html_table_yesterday += f"<td style='color:#2774AE'>{team}</td>"
+                html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
     for team in BrycesTeams:
-        team = teamToAbbr[team]
-        if row['home_team'] == team.lower():
-            if winner.lower() == row['home_team']:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['home_team']:
                 # make background #57068c and font white
-                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{team}</strong></td>"
+                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
             else:
-                html_table_yesterday += f"<td style='color:#57068c'>{team}</td>"
+                html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
     for team in ZachsTeams:
-        team = teamToAbbr[team]
-        if row['home_team'] == team.lower():
-            if winner.lower() == row['home_team']:
+        if row['home_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['home_team']:
                 # make background #e21833 and font white
-                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{team}</strong></td>"
+                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
             else:
-                html_table_yesterday += f"<td style='color:#e21833'>{team}</td>"
+                html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"
     for team in ChasesTeams:
-        team = teamToAbbr[team]
-        if row['away_team'] == team.lower():
-            if winner.lower() == row['away_team']:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]) or (row['away_team'] == team.split(' ')[0] and row['away_team'] == 'Portland'):
+            if winner == row['away_team'] or (winner == 'Portland Trail' and row['away_team'] == 'Portland'):
                 # make background #2774AE and font white
-                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{team}</strong></td>"
+                html_table_yesterday += f"<td style='background-color:#2774AE;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
             else:
-                html_table_yesterday += f"<td style='color:#2774AE'>{team}</td>"
+                html_table_yesterday += f"<td style='color:#2774AE'>{teamToAbbr[team]}</td>"
     for team in BrycesTeams:
-        team = teamToAbbr[team]
-        if row['away_team'] == team.lower():
-            if winner.lower() == row['away_team']:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['away_team']:
                 # make background #57068c and font white
-                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{team}</strong></td>"
+                html_table_yesterday += f"<td style='background-color:#57068c;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
             else:
-                html_table_yesterday += f"<td style='color:#57068c'>{team}</td>"
+                html_table_yesterday += f"<td style='color:#57068c'>{teamToAbbr[team]}</td>"
     for team in ZachsTeams:
-        team = teamToAbbr[team]
-        if row['away_team'] == team.lower():
-            if winner.lower() == row['away_team']:
+        if row['away_team'] == ' '.join(team.split(' ')[:-1]):
+            if winner == row['away_team']:
                 # make background #e21833 and font white
-                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{team}</strong></td>"
+                html_table_yesterday += f"<td style='background-color:#e21833;color:white;'> <strong>{teamToAbbr[team]}</strong></td>"
             else:
-                html_table_yesterday += f"<td style='color:#e21833'>{team}</td>"         
+                html_table_yesterday += f"<td style='color:#e21833'>{teamToAbbr[team]}</td>"         
     html_table_yesterday += f"<td>{row['result']}</td></tr>"
 html_table_yesterday += "</tbody></table>"
 
@@ -528,8 +490,8 @@ html_content = f"""
     </div>
 
     <script>
-        let x = {chaseWins+ bryceWins + zachWins}
-        let y = {1230}
+        let x = {chaseWins+bryceWins+zachWins}
+        let y = {30*41}
         let percentage = ((x / y) * 100).toFixed(1);
 
         let progressBar = document.getElementById("progressBar");
@@ -575,7 +537,7 @@ html_content = f"""
                 pointRadius: 0
             }}]
         }},
-    
+        
         options: {{
             responsive: false,
             scales: {{
@@ -687,10 +649,21 @@ html_content = f"""
   {html_table_yesterday}
 </div>
 
+<h2 style="text-align: center;">All-NBA Player of the Day</h2>
+<div style="text-align: center;">
+    <details>
+        <summary><b>Who am I?</b></summary>
+        <p style="font-size:20px";><b>{allNBA['Players'].values[0]}</b></p>
+    </details>
+</div>
+<p style="text-align: center;"><b>All-NBA Teams:</b> {Teams}</h2>
+<p style="text-align: center;"><b>All-NBA:</b> {Years}</p>
+<p style="text-align: center;"><b>Position:</b> {Pos}</p>
+<p style="text-align: center;"><b>Teams Made:</b> {allNBA['Times_First_Team'].values[0]+allNBA['Times_Second_Team'].values[0]+allNBA['Times_Third_Team'].values[0]}x</p>
+
 </body>
 </html>
 """
-
 # Write HTML content to a file
 with open('index.html', 'w') as f:
     f.write(html_content)
