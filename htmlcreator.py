@@ -27,6 +27,81 @@ def img_to_html(img_path):
     )
     return img_html
 
+def generate_daily_projection_table(matchups_df, ChasesTeams, BrycesTeams, ZachsTeams, teamToAbbr):
+    owner_colors = {
+        "Chase": '#2774AE',
+        "Bryce": '#57068c',
+        "Zach": '#e21833'
+    }
+    
+    # Create abbreviation → owner map
+    owner_map = {}
+    for team in ChasesTeams:
+        owner_map[teamToAbbr[team]] = "Chase"
+    for team in BrycesTeams:
+        owner_map[teamToAbbr[team]] = "Bryce"
+    for team in ZachsTeams:
+        owner_map[teamToAbbr[team]] = "Zach"
+
+    owners = ["Chase", "Bryce", "Zach"]
+    results = {owner: {"teams_playing": 0, "max_wins": 0, "min_wins": 0, "favored": 0} for owner in owners}
+
+    # Iterate through all games today
+    for _, row in matchups_df.iterrows():
+        home = row["home_team"].strip().upper()
+        away = row["away_team"].strip().upper()
+        odds = str(row["odds"]).strip().upper()
+
+        owner_home = owner_map.get(home)
+        owner_away = owner_map.get(away)
+
+        # Skip if neither team belongs to any owner
+        if not owner_home and not owner_away:
+            continue
+
+        # Count teams playing
+        if owner_home:
+            results[owner_home]["teams_playing"] += 1
+        if owner_away:
+            results[owner_away]["teams_playing"] += 1
+
+        # --- Max/Min logic ---
+        if owner_home and owner_away:
+            if owner_home == owner_away:
+                # Two of the same owner's teams are playing each other
+                results[owner_home]["max_wins"] += 1
+                results[owner_home]["min_wins"] += 1
+            else:
+                # Different owners face each other
+                results[owner_home]["max_wins"] += 1
+                results[owner_away]["max_wins"] += 1
+                # Neither guaranteed a win, so min stays 0
+        else:
+            # Only one owner has a team in this matchup
+            owned = owner_home or owner_away
+            results[owned]["max_wins"] += 1
+            # Could lose, so min stays 0
+
+        # --- Favored logic ---
+        if "-" in odds:
+            favored_team = odds.split(" ")[0].strip()
+            favored_owner = owner_map.get(favored_team)
+            if favored_owner:
+                results[favored_owner]["favored"] += 1
+
+    # --- Build HTML output ---
+    html = """
+    <h3>Daily Overview</h3>
+    <table class="standings-table">
+      <tr><th></th><th>Teams Playing</th><th>Max Wins</th><th>Min Wins</th><th>Favored</th></tr>
+    """
+    for owner in owners:
+        color = owner_colors[owner]
+        r = results[owner]
+        html += f"<td style='color:{color}; font-weight:bold;'>{owner}</td><td>{r['teams_playing']}</td><td>{r['max_wins']}</td><td>{r['min_wins']}</td><td>{r['favored']}</td></tr>"
+    html += "</table>"
+    return html
+
 def scrape_nba_standings(url="https://www.espn.com/nba/standings"):
     """
     Scrape NBA standings from ESPN
@@ -297,6 +372,8 @@ for i, row in yesterday_df.iterrows():
     html_table_yesterday += f"<td>{row['result']}</td></tr>"
 html_table_yesterday += "</tbody></table>"
 
+dpt = daily_projection_html = generate_daily_projection_table(matchups_df, ChasesTeams, BrycesTeams, ZachsTeams, teamToAbbr)
+
 # Generate HTML content
 html_content = f"""
 <!DOCTYPE html>
@@ -336,7 +413,8 @@ html_content = f"""
     h1 {{
         text-align: center;
         color: Green;
-        font-size: 60px;
+        font-size: 40px;
+        margin: 8px;
     }}
 
     table {{
@@ -689,7 +767,11 @@ html_content = f"""
 
 </body>
 </html>
+
+
 """
+
+html_content += dpt
 
 # Write HTML content to a file
 with open('index.html', 'w') as f:
