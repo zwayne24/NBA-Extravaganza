@@ -91,14 +91,14 @@ def generate_daily_projection_table(matchups_df, ChasesTeams, BrycesTeams, Zachs
 
     # --- Build HTML output ---
     html = """
-    <h3>Daily Overview</h3>
+    <h3 class="daily-overview-title">Daily Overview</h3>
     <table class="standings-table">
       <tr><th></th><th>Teams Playing</th><th>Max Wins</th><th>Min Wins</th><th>Favored</th></tr>
     """
     for owner in owners:
         color = owner_colors[owner]
         r = results[owner]
-        html += f"<td style='color:{color}; font-weight:bold;'>{owner}</td><td>{r['teams_playing']}</td><td>{r['max_wins']}</td><td>{r['min_wins']}</td><td>{r['favored']}</td></tr>"
+        html += f"<tr><td style='color:{color}; font-weight:bold;'>{owner}</td><td>{r['teams_playing']}</td><td>{r['max_wins']}</td><td>{r['min_wins']}</td><td>{r['favored']}</td></tr>"
     html += "</table>"
     return html
 
@@ -203,13 +203,19 @@ teamToAbbr = {
     'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SA', 'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTAH', 'Washington Wizards': 'WSH'
 }
 
+# Rename Oklahoma City Thunder to OKC Thunder for display
+chasesStandings['Team'] = chasesStandings['Team'].replace('Oklahoma City Thunder', 'OKC Thunder')
+brycesStandings['Team'] = brycesStandings['Team'].replace('Oklahoma City Thunder', 'OKC Thunder')
+zachsStandings['Team'] = zachsStandings['Team'].replace('Oklahoma City Thunder', 'OKC Thunder')
+
 chaseStandingsMobile = chasesStandings.copy()
 bryceStandingsMobile = brycesStandings.copy()
 zachStandingsMobile = zachsStandings.copy()
 
-chaseStandingsMobile['Team'] = chaseStandingsMobile['Team'].map(teamToAbbr)
-bryceStandingsMobile['Team'] = bryceStandingsMobile['Team'].map(teamToAbbr)
-zachStandingsMobile['Team'] = zachStandingsMobile['Team'].map(teamToAbbr)
+# Map using original team names for mobile
+chaseStandingsMobile['Team'] = chaseStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
+bryceStandingsMobile['Team'] = bryceStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
+zachStandingsMobile['Team'] = zachStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
 
 chaseStandingsMobile = chaseStandingsMobile[['Team', 'W']]
 bryceStandingsMobile = bryceStandingsMobile[['Team', 'W']]
@@ -405,195 +411,395 @@ html_content = f"""
     }}
     </script>
     <style>
-    /* Existing styles */
+    * {{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }}
+
     body {{
-        font-family: Arial, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        min-height: 100vh;
+        padding: 20px;
     }}
 
     h1 {{
         text-align: center;
-        color: Green;
-        font-size: 40px;
-        margin: 8px;
+        color: #ffffff;
+        font-size: 48px;
+        margin: 20px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-weight: 700;
+        letter-spacing: 2px;
+    }}
+
+    h2 {{
+        color: #333;
+        font-weight: 600;
+    }}
+
+    h3 {{
+        color: #555;
+        font-size: 28px;
+        margin: 20px 0 15px 0;
+        font-weight: 600;
     }}
 
     table {{
         margin: 0 auto;
-        width: 50%;
+        width: 100%;
         border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
     }}
 
     th, td {{
-        padding: 10px;
+        padding: 14px 16px;
         text-align: center;
-        border: 1px solid black;
+        font-size: 16px;
+    }}
+
+    th {{
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }}
+
+    td {{
+        border-bottom: 1px solid #f0f0f0;
     }}
 
     img {{
         display: block;
         margin: 0 auto;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        height: 120px;
+        width: auto;
     }}
 
-    .column {{
-        float: left;
-        width: 33.33%;
-        text-align: center;
-    }}
-
-    .row:after {{
-        content: "";
-        display: table;
-        clear: both;
-    }}
-
-    /* New styles */
     .row {{
         display: flex;
         justify-content: space-around;
-        margin-top: 20px;
+        margin-top: 30px;
+        gap: 20px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
     }}
 
     .column {{
         flex: 1;
-        padding: 15px;
+        padding: 0;
+        min-width: 0;
     }}
 
     .card {{
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        background-color: #f9f9f9;
-        padding: 20px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 30px;
         text-align: center;
+        height: 100%;
     }}
 
     .card-header {{
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }}
 
     .card-body h2 {{
-        font-size: 24px;
+        font-size: 32px;
         color: #333;
-        margin: 10px 0;
+        margin: 15px 0;
+        font-weight: 700;
     }}
 
     .table-container {{
-        margin-top: 15px;
+        margin-top: 20px;
         overflow-x: auto;
+        border-radius: 8px;
     }}
-    
+
     .table-container2 {{
         margin-top: 0px;
         overflow-x: visible;
         font-size: 12px;
     }}
 
-    table {{
-        width: 100%;
-        border-collapse: collapse;
+    .table-container table,
+    .table-container2 table {{
+        border-radius: 8px;
+        overflow: hidden;
     }}
 
-    table, th, td {{
-        border: 1px solid #ccc;
-        padding: 10px;
-    }}
-
-    th {{
-        background-color: #f2f2f2;
-        color: #333;
-        font-weight: bold;
-    }}
-
-    td {{
-        text-align: center;
-    }}
-    
     #myLineChart {{
         width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
     }}
-    
+
     .progress-container {{
-            width: 100%;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-            position: relative;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto 20px auto;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        position: relative;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }}
 
     .progress-bar {{
-        height: 30px;
-        background-color: #4CAF50;
+        height: 40px;
+        background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
         text-align: center;
-        color: black;
-        line-height: 30px;
-        border-radius: 5px;
+        color: white;
+        line-height: 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 16px;
+        transition: width 0.5s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }}
-    
+
+    .tab {{
+        overflow: hidden;
+        background: white;
+        text-align: center;
+        max-width: 1400px;
+        margin: 30px auto;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 5px;
+    }}
+
+    .tab button {{
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 30px;
+        transition: all 0.3s;
+        font-size: 16px;
+        font-weight: 600;
+        color: #666;
+        border-radius: 50px;
+        margin: 0 5px;
+    }}
+
+    .tab button:hover {{
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }}
+
+    .tab button.active {{
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
+    }}
+
+    .tabcontent {{
+        display: none;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        max-width: 1400px;
+        margin: 20px auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }}
+
+    .tabcontent h2 {{
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }}
+
+    hr {{
+        border: none;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, currentColor, transparent);
+        margin: 15px 0;
+    }}
+
+    .standings-table {{
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 20px auto;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }}
+
+    .standings-table th {{
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 14px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white;
+    }}
+
+    .standings-table td {{
+        padding: 14px 16px;
+        font-weight: 600;
+        font-size: 16px;
+    }}
+
+    .daily-overview-title {{
+        color: white;
+        padding: 5px;
+        text-align: center;
+        margin: 5px auto;
+        max-width: 1400px;
+        font-weight: 700;
+    }}
+
     @media screen and (max-width: 600px) {{
         .column {{
-            flex: 100%; /* Make each column take up full width */
-            padding: 0px;
+            flex: 1;
+            padding: 3px;
+            min-width: 0;
         }}
-        
+
+        .row {{
+            flex-direction: row;
+            gap: 3px;
+            margin-top: 15px;
+        }}
+
         .table-container {{
             display: none;
         }}
-        
+
         .table-container2 {{
-            display: "block";
+            display: block;
+        }}
+
+        .table-container2 table {{
+            font-size: 12px;
+        }}
+
+        .table-container2 th,
+        .table-container2 td {{
+            padding: 8px 4px;
+        }}
+
+        .table-container2 th {{
+            font-size: 11px;
+        }}
+
+        h1 {{
+            font-size: 28px;
+            margin: 10px 0;
+            letter-spacing: 1px;
+        }}
+
+        .card {{
+            padding: 10px;
+            border-radius: 12px;
+        }}
+
+        .card-body h2 {{
+            font-size: 20px;
+            margin: 8px 0;
+            font-weight: 700;
+        }}
+
+        .card-header {{
+            margin-bottom: 10px;
+        }}
+
+        .card-header img {{
+            height: 90px;
+            width: auto;
+        }}
+
+        hr {{
+            margin: 8px 0;
+            height: 2px;
+        }}
+
+        .tab button {{
+            padding: 10px 15px;
+            font-size: 13px;
+        }}
+
+        body {{
+            padding: 8px;
+        }}
+
+        .progress-bar {{
+            height: 32px;
+            line-height: 32px;
+            font-size: 13px;
+        }}
+
+        .progress-container {{
+            margin-bottom: 15px;
+        }}
+
+        .tabcontent {{
+            padding: 15px;
+        }}
+
+        tr:hover td {{
+            background-color: transparent;
+        }}
+
+        .daily-overview-title {{
+            font-size: 20px;
+            margin: 10px auto;
+        }}
+
+        .standings-table {{
+            font-size: 14px;
+        }}
+
+        .standings-table th {{
+            font-size: 12px;
+            padding: 10px 5px;
+        }}
+
+        .standings-table td {{
+            font-size: 14px;
+            padding: 8px 4px;
         }}
     }}
-    
-        /* Style the tab */
-    .tab {{
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-    text-align: center;
-    }}
 
-    /* Style the buttons that are used to open the tab content */
-    .tab button {{
-    background-color: inherit;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    }}
-
-    /* Change background color of buttons on hover */
-    .tab button:hover {{
-    background-color: #ddd;
-    }}
-
-    /* Create an active/current tablink class */
-    .tab button.active {{
-    background-color: #ccc;
-    }}
-
-    /* Style the tab content */
-    .tabcontent {{
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-    }}
-    
     @media screen and (min-width: 601px) {{
         .table-container2 {{
             display: none;
         }}
+    }}
+
+    ch {{
+        text-decoration: underline;
+        -webkit-text-decoration-color: red;
+        text-decoration-color: red;
+        font-size: 24px;
+        font-weight: bold;
+    }}
+
+    /* Chart container styling */
+    #chart-container {{
+        background: white;
+        border-radius: 20px;
+        padding: 10px;
+        margin: 10px auto;
+        max-width: 95%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }}
+
+    @media screen and (min-width: 601px) {{
         #chart-container {{
             display: none;
         }}
-    }}
-    
-    ch {{
-        text-decoration: underline;
-        -webkit-text-decoration-color: red; /* safari still uses vendor prefix */
-        text-decoration-color: red;
-        font-size: 24px;
-        font-weight:bold;
     }}
 
 </style>
@@ -697,10 +903,10 @@ html_content = f"""
         <div class="card">
             <div class="card-header">
                 {img_to_html('photos/ChaseHead.png')}
+                <hr style="background: #2774AE; background-image: none; height: 3px; border: none; margin: 15px 0;"/>
             </div>
-            <hr color="#2774AE">
             <div class="card-body">
-                <h2>Chase's Wins: {chaseWins}</h2>
+                <h2>Chase's Wins: <br>{chaseWins}</h2>
                 <div class="table-container">
                     {chasesStandings.to_html(index=False)}
                 </div>
@@ -715,10 +921,10 @@ html_content = f"""
         <div class="card">
             <div class="card-header">
                 {img_to_html('photos/BryceHead.png')}
+                <hr style="background: #57068c; background-image: none; height: 3px; border: none; margin: 15px 0;"/>
             </div>
-            <hr color="#57068c">
             <div class="card-body">
-                <h2>Bryce's Wins: {bryceWins}</h2>
+                <h2>Bryce's Wins: <br>{bryceWins}</h2>
                 <div class="table-container">
                     {brycesStandings.to_html(index=False)}
                 </div>
@@ -733,10 +939,10 @@ html_content = f"""
         <div class="card">
             <div class="card-header">
                 {img_to_html('photos/ZachHead.png')}
+                <hr style="background: #e21833; background-image: none; height: 3px; border: none; margin: 15px 0;"/>
             </div>
-            <hr color="#e21833">
             <div class="card-body">
-                <h2>Zach's Wins: {zachWins}</h2>
+                <h2>Zach's Wins: <br>{zachWins}</h2>
                 <div class="table-container" >
                     {zachsStandings.to_html(index=False)}
                 </div>
@@ -747,7 +953,6 @@ html_content = f"""
         </div>
     </div>
 </div>
-<hr/>
 
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'TG')">Today's Games</button>
