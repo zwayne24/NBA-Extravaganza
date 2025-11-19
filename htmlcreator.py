@@ -226,10 +226,19 @@ chaseWins = chasesStandings['W'].sum()
 bryceWins = brycesStandings['W'].sum()
 zachWins = zachsStandings['W'].sum()
 
-df = pd.read_excel('Wins_Over_Time.xlsx') 
-# add on to end of dataframe with todays data and wins
-todaysData = pd.DataFrame({'Day': date.today()-pd.Timedelta(days=1), 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})  
-df = pd.concat([df, todaysData], ignore_index=True)
+df = pd.read_excel('Wins_Over_Time.xlsx')
+# Check if today's date already exists in the dataframe
+today = date.today()-pd.Timedelta(days=1)
+existing_row = df[df['Day'] == today]
+
+if not existing_row.empty:
+    # Update the existing row for today's date
+    df.loc[df['Day'] == today, ['Chase', 'Bryce', 'Zach']] = [chaseWins, bryceWins, zachWins]
+else:
+    # Add new row with today's data and wins
+    todaysData = pd.DataFrame({'Day': [today], 'Chase': [chaseWins], 'Bryce': [bryceWins], 'Zach': [zachWins]})
+    df = pd.concat([df, todaysData], ignore_index=True)
+
 # save to excel
 df.to_excel('Wins_Over_Time.xlsx', index=False)
 df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
