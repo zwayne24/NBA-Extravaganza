@@ -227,8 +227,10 @@ bryceWins = brycesStandings['W'].sum()
 zachWins = zachsStandings['W'].sum()
 
 df = pd.read_excel('Wins_Over_Time.xlsx')
-# Check if today's date already exists in the dataframe
-today = date.today()-pd.Timedelta(days=1)
+# Normalize the Day column to just dates (no time component)
+df['Day'] = pd.to_datetime(df['Day']).dt.normalize()
+# Get today's date as a normalized datetime
+today = pd.Timestamp(date.today()-datetime.timedelta(days=1)).normalize()
 existing_row = df[df['Day'] == today]
 
 if not existing_row.empty:
