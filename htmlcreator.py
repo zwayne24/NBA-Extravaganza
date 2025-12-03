@@ -273,15 +273,19 @@ if schedule_table:
         time = row.find('td', class_='date__col').text.strip() if row.find('td', class_='date__col') else None
         
         # Extract odds (e.g., point spread)
-        odds_info = row.find('div', class_='Odds__Message')
-        odds = odds_info.text.strip() if odds_info else None
+        try:
+            odds_info = row.find('div', class_='Odds__Message')
+            odds = odds_info.text.strip() if odds_info else None
+            odds = odds.split('O/U')[0].split('Line: ')[1]
+        except:
+            odds = None
 
         # Store each matchup as a dictionary
         matchups.append({
             'away_team': away_team,
             'home_team': home_team,
             'time': time,
-            'odds': odds.split('O/U')[0].split('Line: ')[1] if odds else None,
+            'odds': odds,
         })
                 
 if yesterday_table:
