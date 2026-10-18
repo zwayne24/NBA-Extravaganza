@@ -617,11 +617,9 @@ html_content = f"""
         font-size: 12px;
     }}
 
-    /* Shrink streak/season emojis on phones and keep them together on one line */
-    .table-container2 .badges {{
-        font-size: 0.75em;
-        letter-spacing: -1px;
-        white-space: nowrap;
+    /* Streak/season emojis are hidden when any of them would wrap (see fitBadges) */
+    .hide-badges .badges {{
+        display: none;
     }}
 
     .table-container table,
@@ -784,10 +782,6 @@ html_content = f"""
 
         .table-container2 th {{
             font-size: 11px;
-        }}
-
-        .table-container2 td {{
-            font-size: 13px;
         }}
 
         h1 {{
@@ -1188,6 +1182,22 @@ html_content = f"""
   {html_table_yesterday}
 </div>
 
+<script>
+    // Show streak/season emojis only if every one fits on the same line as its team name
+    function fitBadges() {{
+        document.body.classList.remove('hide-badges');
+        var wraps = Array.from(document.querySelectorAll('.badges')).some(function(badge) {{
+            if (!badge.offsetParent) return false;  // in a hidden (desktop/mobile) table
+            var range = document.createRange();
+            range.selectNodeContents(badge.parentNode.firstChild);
+            var team = range.getBoundingClientRect();
+            return badge.getClientRects().length > 1 || badge.getBoundingClientRect().top >= team.bottom - 1;
+        }});
+        document.body.classList.toggle('hide-badges', wraps);
+    }}
+    window.addEventListener('load', fitBadges);
+    window.addEventListener('resize', fitBadges);
+</script>
 </body>
 </html>
 
