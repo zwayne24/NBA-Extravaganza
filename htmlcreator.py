@@ -786,6 +786,10 @@ html_content = f"""
             font-size: 11px;
         }}
 
+        .table-container2 td {{
+            font-size: 13px;
+        }}
+
         h1 {{
             font-size: 28px;
             margin: 10px 0;
