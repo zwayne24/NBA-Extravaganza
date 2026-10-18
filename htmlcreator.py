@@ -617,11 +617,6 @@ html_content = f"""
         font-size: 12px;
     }}
 
-    /* Streak/season emojis are hidden when any of them would wrap (see fitBadges) */
-    .hide-badges .badges {{
-        display: none;
-    }}
-
     .table-container table,
     .table-container2 table {{
         border-radius: 8px;
@@ -1183,20 +1178,23 @@ html_content = f"""
 </div>
 
 <script>
-    // Show streak/season emojis only if every one fits on the same line as its team name
-    function fitBadges() {{
-        document.body.classList.remove('hide-badges');
-        var wraps = Array.from(document.querySelectorAll('.badges')).some(function(badge) {{
-            if (!badge.offsetParent) return false;  // in a hidden (desktop/mobile) table
-            var range = document.createRange();
-            range.selectNodeContents(badge.parentNode.firstChild);
-            var team = range.getBoundingClientRect();
-            return badge.getClientRects().length > 1 || badge.getBoundingClientRect().top >= team.bottom - 1;
+    // Keep the owners' standings tables lined up: if a row wraps (e.g. a team with emojis)
+    // in one table, give the same row in the other tables the same height
+    function syncRowHeights() {{
+        ['.table-container', '.table-container2'].forEach(function(sel) {{
+            var rowSets = Array.from(document.querySelectorAll('#cardsRow ' + sel + ' table'))
+                .filter(function(t) {{ return t.offsetParent; }})
+                .map(function(t) {{ return Array.from(t.rows); }});
+            rowSets.forEach(function(rows) {{ rows.forEach(function(r) {{ r.style.height = ''; }}); }});
+            var n = Math.max.apply(null, rowSets.map(function(rows) {{ return rows.length; }}).concat(0));
+            for (var i = 0; i < n; i++) {{
+                var h = Math.max.apply(null, rowSets.map(function(rows) {{ return rows[i] ? rows[i].getBoundingClientRect().height : 0; }}));
+                rowSets.forEach(function(rows) {{ if (rows[i]) rows[i].style.height = h + 'px'; }});
+            }}
         }});
-        document.body.classList.toggle('hide-badges', wraps);
     }}
-    window.addEventListener('load', fitBadges);
-    window.addEventListener('resize', fitBadges);
+    window.addEventListener('load', syncRowHeights);
+    window.addEventListener('resize', syncRowHeights);
 </script>
 </body>
 </html>
