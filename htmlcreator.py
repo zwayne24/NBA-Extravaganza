@@ -9,7 +9,6 @@ import datetime
 
 # === Original HTML Creation Logic ===
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 import base64
 from pathlib import Path
@@ -102,89 +101,62 @@ def generate_daily_projection_table(matchups_df, ChasesTeams, BrycesTeams, Zachs
     html += "</table>"
     return html
 
-def scrape_nba_standings(url="https://www.espn.com/nba/standings"):
+ESPN_API = 'https://site.api.espn.com/apis'
+ESPN_HEADERS = {'User-Agent': 'Mozilla/5.0'}
+
+def scrape_nba_standings():
     """
-    Scrape NBA standings from ESPN
+    Fetch regular-season NBA standings from ESPN's JSON API
     Returns a DataFrame with team name, wins, losses, and winning percentage
     """
-    # Send GET request
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    response = requests.get(url, headers=headers)
+    response = requests.get(f'{ESPN_API}/v2/sports/basketball/nba/standings?seasontype=2', headers=ESPN_HEADERS)
     response.raise_for_status()
-    
-    # Parse HTML
-    soup = BeautifulSoup(response.content, 'html.parser')
-    
+
     all_teams = []
-    
-    # Find all ResponsiveTable divs (one for Eastern Conference, one for Western Conference)
-    responsive_tables = soup.find_all('div', class_='ResponsiveTable')
-    
-    for responsive_table in responsive_tables:
-        # Find the fixed-left table (contains team names)
-        team_table = responsive_table.find('table', class_='Table--fixed-left')
-        # Find the scrollable table (contains stats)
-        stats_table = responsive_table.find('div', class_='Table__Scroller')
-        
-        if not team_table or not stats_table:
-            continue
-            
-        stats_table = stats_table.find('table')
-        
-        # Get team rows
-        team_rows = team_table.find('tbody').find_all('tr')
-        # Get stat rows
-        stat_rows = stats_table.find('tbody').find_all('tr')
-        
-        # Match team rows with stat rows (they should be in the same order)
-        for team_row, stat_row in zip(team_rows, stat_rows):
-            try:
-                # Extract team name from the team table
-                team_link = team_row.find('span', class_='hide-mobile')
-                if team_link:
-                    team_name = team_link.get_text(strip=True)
-                else:
-                    # Try mobile version
-                    team_abbr = team_row.find('abbr')
-                    if team_abbr:
-                        team_name = team_abbr.get_text(strip=True)
-                    else:
-                        continue
-                
-                # Extract stats from the stats table
-                stat_cells = stat_row.find_all('span', class_='stat-cell')
-                
-                if len(stat_cells) >= 3:
-                    wins = stat_cells[0].get_text(strip=True)
-                    losses = stat_cells[1].get_text(strip=True)
-                    pct = stat_cells[2].get_text(strip=True)
-                    
-                    all_teams.append({
-                        'Team': team_name,
-                        'W': wins,
-                        'L': losses,
-                        'PCT': pct
-                    })
-            except (IndexError, AttributeError) as e:
-                print(f"Error processing row: {e}")
-                continue
-    
-    # Create DataFrame
-    df = pd.DataFrame(all_teams)
-    return df
+    for conference in response.json()['children']:
+        for entry in conference['standings']['entries']:
+            stats = {stat['name']: stat.get('value', 0) for stat in entry['stats']}
+            all_teams.append({
+                'Team': entry['team']['displayName'],
+                'W': stats.get('wins', 0),
+                'L': stats.get('losses', 0),
+                'PCT': stats.get('winPercent', 0),
+            })
+    return pd.DataFrame(all_teams)
+
+def fetch_nba_scoreboard(day):
+    """Fetch the list of NBA games on a given date from ESPN's JSON API"""
+    response = requests.get(f'{ESPN_API}/site/v2/sports/basketball/nba/scoreboard?dates={day.strftime("%Y%m%d")}', headers=ESPN_HEADERS)
+    response.raise_for_status()
+    return response.json().get('events', [])
 
 standings = scrape_nba_standings()
 
-ChasesTeams = ['Denver Nuggets','New York Knicks','Golden State Warriors','LA Clippers','Dallas Mavericks','Boston Celtics','Miami Heat','Sacramento Kings','Phoenix Suns','Brooklyn Nets']
-BrycesTeams = ['Oklahoma City Thunder','Orlando Magic','Minnesota Timberwolves','Atlanta Hawks','San Antonio Spurs','Memphis Grizzlies','Indiana Pacers','Chicago Bulls','Portland Trail Blazers','Utah Jazz']
-ZachsTeams = ['Cleveland Cavaliers','Houston Rockets','Los Angeles Lakers','Detroit Pistons','Milwaukee Bucks','Philadelphia 76ers','Toronto Raptors','New Orleans Pelicans','Charlotte Hornets','Washington Wizards']
+ChasesTeams = ['Oklahoma City Thunder','Boston Celtics','Denver Nuggets','Toronto Raptors','Indiana Pacers','Golden State Warriors','Orlando Magic','Memphis Grizzlies','LA Clippers','Sacramento Kings']
+ZachsTeams = ['San Antonio Spurs','Philadelphia 76ers','Houston Rockets','Minnesota Timberwolves','Atlanta Hawks','Portland Trail Blazers','Charlotte Hornets','Dallas Mavericks','New Orleans Pelicans','Milwaukee Bucks']
+BrycesTeams = ['New York Knicks','Cleveland Cavaliers','Los Angeles Lakers','Miami Heat','Detroit Pistons','Phoenix Suns','Washington Wizards','Utah Jazz','Chicago Bulls','Brooklyn Nets']
+
+# Snake draft order: Chase 1st, Zach 2nd, Bryce 3rd. Team arrays are in pick order.
+# R1: Chase(1), Zach(2), Bryce(3) | R2: Bryce(4), Zach(5), Chase(6) | R3: Chase(7), ...
+_chase_ovr = [1,  6,  7, 12, 13, 18, 19, 24, 25, 30]
+_zach_ovr  = [2,  5,  8, 11, 14, 17, 20, 23, 26, 29]
+_bryce_ovr = [3,  4,  9, 10, 15, 16, 21, 22, 27, 28]
+draft_info = {}
+for i, team in enumerate(ChasesTeams):
+    ovr = _chase_ovr[i]; draft_info[team] = {'rd': (ovr - 1) // 3 + 1, 'ovr': ovr}
+for i, team in enumerate(ZachsTeams):
+    ovr = _zach_ovr[i];  draft_info[team] = {'rd': (ovr - 1) // 3 + 1, 'ovr': ovr}
+for i, team in enumerate(BrycesTeams):
+    ovr = _bryce_ovr[i]; draft_info[team] = {'rd': (ovr - 1) // 3 + 1, 'ovr': ovr}
 
 # Process standings data
 standings['W'] = standings['W'].astype(int)
 standings['L'] = standings['L'].astype(int)
 standings['PCT'] = standings['PCT'].astype(float)
+
+standings_sorted = standings.sort_values(by=['PCT', 'Team'], ascending=[False, True]).reset_index(drop=True)
+overall_live_rank = {row['Team']: rnk + 1 for rnk, row in standings_sorted.iterrows()}
+
 standings = standings.sort_values(by='W', ascending=False).drop(columns=['PCT'])
 
 chasesStandings = standings[standings['Team'].isin(ChasesTeams)].reset_index(drop=True)
@@ -221,6 +193,52 @@ chaseStandingsMobile = chaseStandingsMobile[['Team', 'W']]
 bryceStandingsMobile = bryceStandingsMobile[['Team', 'W']]
 zachStandingsMobile = zachStandingsMobile[['Team', 'W']]
 
+def build_combined_value_view_html(draft_info, overall_live_rank, teamToAbbr, ChasesTeams, BrycesTeams, ZachsTeams):
+    owner_colors = {'Chase': '#2774AE', 'Bryce': '#57068c', 'Zach': '#e21833'}
+    owner_map = {}
+    for team in ChasesTeams: owner_map[team] = 'Chase'
+    for team in BrycesTeams: owner_map[team] = 'Bryce'
+    for team in ZachsTeams: owner_map[team] = 'Zach'
+
+    rows = []
+    for team in list(ChasesTeams) + list(BrycesTeams) + list(ZachsTeams):
+        abbr = teamToAbbr.get(team, team)
+        owner = owner_map.get(team, '')
+        color = owner_colors.get(owner, '#999')
+        d = draft_info.get(team, {})
+        draft_ovr = d.get('ovr', 0)
+        live_ovr = overall_live_rank.get(team, 0)
+        delta = (live_ovr - draft_ovr) if (draft_ovr and live_ovr) else 0
+        rows.append((abbr, owner, color, draft_ovr, live_ovr, delta))
+
+    rows.sort(key=lambda x: x[4])  # default sort: current rank
+
+    html = '<table class="standings-table" id="valueTable"><thead><tr>'
+    html += '<th>TEAM</th>'
+    html += '<th class="sortable" onclick="sortValueTable(1)">DRAFT &#8597;</th>'
+    html += '<th class="sortable" onclick="sortValueTable(2)">CURR &#8597;</th>'
+    html += '<th class="sortable" onclick="sortValueTable(3)">&#916; &#8597;</th>'
+    html += '</tr></thead><tbody>'
+
+    for abbr, owner, color, draft_ovr, live_ovr, delta in rows:
+        if delta < 0:
+            delta_html = f"<span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;{abs(delta)}</span>"
+        elif delta > 0:
+            delta_html = f"<span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;{delta}</span>"
+        else:
+            delta_html = "&#8212;"
+        html += f'<tr data-owner="{owner}">'
+        html += f'<td style="border-left:4px solid {color};font-weight:600;padding-left:12px;">{abbr}</td>'
+        html += f'<td data-val="{draft_ovr}">{draft_ovr}</td>'
+        html += f'<td data-val="{live_ovr}">{live_ovr}</td>'
+        html += f'<td data-val="{delta}">{delta_html}</td>'
+        html += '</tr>'
+
+    html += '</tbody></table>'
+    return html
+
+combined_value_html = build_combined_value_view_html(draft_info, overall_live_rank, teamToAbbr, ChasesTeams, BrycesTeams, ZachsTeams)
+
 # Calculate total wins and losses
 chaseWins = chasesStandings['W'].sum()
 bryceWins = brycesStandings['W'].sum()
@@ -247,63 +265,36 @@ df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
 # format dat as Oct-22
 df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
 
-url = 'https://www.espn.com/nba/schedule'
-headers = {
-    'User-Agent': 'Mozilla/5.0'
-}
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.text, 'html.parser')
-
-# Locate the schedule table
+# Fetch today's and yesterday's games from ESPN's JSON API
 matchups = []
 yesterday = []
-schedule_table = soup.find_all('div', class_='ScheduleTables')[1]
-yesterday_table = soup.find_all('div', class_='ScheduleTables')[0]
 
-if schedule_table:
-    # Find each matchup row
-    rows = schedule_table.find_all('tr', class_='Table__TR--sm')
+for event in fetch_nba_scoreboard(date.today()):
+    competition = event['competitions'][0]
+    teams = {c['homeAway']: c for c in competition['competitors']}
+    odds = (competition.get('odds') or [{}])[0].get('details')
+    # e.g. "10/21 - 7:00 PM EDT" -> "7:00 PM EDT"
+    time = event['status']['type'].get('shortDetail', '').split(' - ')[-1]
+    matchups.append({
+        'away_team': teams['away']['team']['abbreviation'].lower(),
+        'home_team': teams['home']['team']['abbreviation'].lower(),
+        'time': time,
+        'odds': odds,
+    })
 
-    for row in rows:
-        # Extract team names
-        teams = row.find_all('a', class_='AnchorLink')
-        away_team = teams[1]['href'].split('/')[-2] if teams else None
-        home_team = teams[3]['href'].split('/')[-2] if len(teams) > 1 else None
-        # Extract time
-        time = row.find('td', class_='date__col').text.strip() if row.find('td', class_='date__col') else None
-        
-        # Extract odds (e.g., point spread)
-        try:
-            odds_info = row.find('div', class_='Odds__Message')
-            odds = odds_info.text.strip() if odds_info else None
-            odds = odds.split('O/U')[0].split('Line: ')[1]
-        except:
-            odds = None
-
-        # Store each matchup as a dictionary
-        matchups.append({
-            'away_team': away_team,
-            'home_team': home_team,
-            'time': time,
-            'odds': odds,
-        })
-                
-if yesterday_table:
-    rows = yesterday_table.find_all('tr', class_='Table__TR--sm')
-    for row in rows:
-        # Extract team names
-        teams = row.find_all('a', class_='AnchorLink')
-        away_team = teams[1]['href'].split('/')[-2] if teams else None
-        home_team = teams[3]['href'].split('/')[-2] if len(teams) > 1 else None
-        result = teams[4].text.strip() if len(teams) > 1 else None
-        
-        if result != "Postponed":
-            yesterday.append({
-                'away_team': away_team,
-                'home_team': home_team,
-                'result': result,
-                'winner': result.split(' ')[0] if result else None,
-            })
+for event in fetch_nba_scoreboard(date.today() - datetime.timedelta(days=1)):
+    if not event['status']['type'].get('completed'):
+        continue  # postponed / not played
+    competition = event['competitions'][0]
+    teams = {c['homeAway']: c for c in competition['competitors']}
+    ranked = sorted(competition['competitors'], key=lambda c: int(c.get('score', 0)), reverse=True)
+    result = ', '.join(f"{c['team']['abbreviation']} {c['score']}" for c in ranked)
+    yesterday.append({
+        'away_team': teams['away']['team']['abbreviation'].lower(),
+        'home_team': teams['home']['team']['abbreviation'].lower(),
+        'result': result,
+        'winner': ranked[0]['team']['abbreviation'],
+    })
 
 # Create a DataFrame from the matchups list
 matchups_df = pd.DataFrame(matchups)
@@ -423,6 +414,44 @@ html_content = f"""
         // Show the current tab, and add an "active" class to the button that opened the tab
         document.getElementById(cityName).style.display = "block";
         evt.currentTarget.className += " active";
+    }}
+
+    var _valueViewActive = false;
+    function toggleValueView() {{
+        _valueViewActive = !_valueViewActive;
+        document.querySelectorAll('.toggle-btn').forEach(function(b) {{
+            b.classList.toggle('active', _valueViewActive);
+        }});
+        document.getElementById('cardsRow').style.display = _valueViewActive ? 'none' : '';
+        document.getElementById('valueViewSection').style.display = _valueViewActive ? 'block' : 'none';
+    }}
+
+    var _sortCol = 2;
+    var _sortAsc = true;
+
+    function sortValueTable(col) {{
+        if (_sortCol === col) {{
+            _sortAsc = !_sortAsc;
+        }} else {{
+            _sortCol = col;
+            _sortAsc = true;
+        }}
+        var tbody = document.querySelector('#valueTable tbody');
+        var rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort(function(a, b) {{
+            var aVal = parseFloat(a.cells[col].dataset.val);
+            var bVal = parseFloat(b.cells[col].dataset.val);
+            return _sortAsc ? aVal - bVal : bVal - aVal;
+        }});
+        rows.forEach(function(r) {{ tbody.appendChild(r); }});
+    }}
+
+    function filterOwner(btn, owner) {{
+        document.querySelectorAll('.vf-btn').forEach(function(b) {{ b.classList.remove('active'); }});
+        btn.classList.add('active');
+        document.querySelectorAll('#valueTable tbody tr').forEach(function(r) {{
+            r.style.display = (owner === 'all' || r.dataset.owner === owner) ? '' : 'none';
+        }});
     }}
     </script>
     <style>
@@ -817,6 +846,114 @@ html_content = f"""
         }}
     }}
 
+    .title-row {{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 1400px;
+        margin: 20px auto;
+        position: relative;
+    }}
+
+    .title-row h1 {{
+        margin: 0;
+    }}
+
+    .toggle-btn {{
+        position: absolute;
+        right: 0;
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.6);
+        color: white;
+        padding: 8px 18px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(5px);
+        white-space: nowrap;
+    }}
+
+    .toggle-btn:hover {{
+        background: rgba(255,255,255,0.35);
+    }}
+
+    .toggle-btn.active {{
+        background: white;
+        color: #059669;
+        border-color: white;
+    }}
+
+    #valueViewSection {{
+        display: none;
+        max-width: 600px;
+        margin: 20px auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        padding: 20px;
+    }}
+
+    .value-filter {{
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }}
+
+    .vf-btn {{
+        background: transparent;
+        border: 2px solid #ddd;
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #666;
+    }}
+
+    .vf-btn.active, .vf-btn:hover {{
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white !important;
+        border-color: transparent !important;
+    }}
+
+    .sortable {{
+        cursor: pointer;
+    }}
+
+    .sortable:hover {{
+        opacity: 0.8;
+    }}
+
+    @media screen and (max-width: 600px) {{
+        #valueViewSection {{
+            max-width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+        }}
+    }}
+
+    .desktop-vv {{ display: inline-block; }}
+    .mobile-vv  {{ display: none; }}
+
+    @media screen and (max-width: 600px) {{
+        .toggle-btn {{
+            padding: 6px 10px;
+            font-size: 11px;
+        }}
+        .desktop-vv {{ display: none; }}
+        .mobile-vv  {{
+            display: block;
+            position: static;
+            width: fit-content;
+            margin: 14px auto;
+        }}
+    }}
+
 </style>
 
 </head>
@@ -836,7 +973,10 @@ html_content = f"""
         progressBar.innerText = percentage+ "%";
     </script>
 
-<h1>NBA Extravaganza</h1>
+<div class="title-row">
+    <h1>NBA Extravaganza</h1>
+    <button id="valueViewBtn" class="toggle-btn desktop-vv" onclick="toggleValueView()">Value View</button>
+</div>
 <div id="chart-container">
     <canvas id="myLineChart"></canvas>
 </div>
@@ -912,8 +1052,9 @@ html_content = f"""
         }}
     }});
 </script>           
+<button id="valueViewBtnM" class="toggle-btn mobile-vv" onclick="toggleValueView()">Value View</button>
 
-<div class="row">
+<div class="row" id="cardsRow">
     <div class="column">
         <div class="card">
             <div class="card-header">
@@ -967,6 +1108,16 @@ html_content = f"""
             </div>
         </div>
     </div>
+</div>
+
+<div id="valueViewSection">
+    <div class="value-filter">
+        <button class="vf-btn active" data-owner="all" onclick="filterOwner(this, 'all')">All</button>
+        <button class="vf-btn" data-owner="Chase" onclick="filterOwner(this, 'Chase')" style="border-color:#2774AE;color:#2774AE;">Chase</button>
+        <button class="vf-btn" data-owner="Bryce" onclick="filterOwner(this, 'Bryce')" style="border-color:#57068c;color:#57068c;">Bryce</button>
+        <button class="vf-btn" data-owner="Zach" onclick="filterOwner(this, 'Zach')" style="border-color:#e21833;color:#e21833;">Zach</button>
+    </div>
+    {combined_value_html}
 </div>
 
 <div class="tab">
