@@ -217,8 +217,10 @@ zachStandingsMobile['Team'] = zachStandingsMobile['Team'].replace('OKC Thunder',
 
 # Fire / ice emoji for teams on a 5+ game win / losing streak, plus season badges
 def add_streak_emoji(df):
-    df['Team'] = [team + (' 🔥' if streak >= 5 else ' 🧊' if streak <= -5 else '') + badges
-                  for team, streak, badges in zip(df['Team'], df['Streak'], df['Badges'])]
+    def emojis(streak, badges):
+        e = (' 🔥' if streak >= 5 else ' 🧊' if streak <= -5 else '') + badges
+        return f' <span class="badges">{e.strip()}</span>' if e else ''
+    df['Team'] = [team + emojis(streak, badges) for team, streak, badges in zip(df['Team'], df['Streak'], df['Badges'])]
     return df.drop(columns=['Streak', 'Badges'])
 
 chasesStandings = add_streak_emoji(chasesStandings)
@@ -613,6 +615,13 @@ html_content = f"""
         margin-top: 0px;
         overflow-x: visible;
         font-size: 12px;
+    }}
+
+    /* Shrink streak/season emojis on phones and keep them together on one line */
+    .table-container2 .badges {{
+        font-size: 0.75em;
+        letter-spacing: -1px;
+        white-space: nowrap;
     }}
 
     .table-container table,
@@ -1103,10 +1112,10 @@ html_content = f"""
             <div class="card-body">
                 <h2>Chase's Wins: <br>{chaseWins}</h2>
                 <div class="table-container">
-                    {chasesStandings.to_html(index=False)}
+                    {chasesStandings.to_html(index=False, escape=False)}
                 </div>
                 <div class="table-container2">
-                    {chaseStandingsMobile.to_html(index=False)}
+                    {chaseStandingsMobile.to_html(index=False, escape=False)}
                 </div>
             </div>
         </div>
@@ -1121,10 +1130,10 @@ html_content = f"""
             <div class="card-body">
                 <h2>Bryce's Wins: <br>{bryceWins}</h2>
                 <div class="table-container">
-                    {brycesStandings.to_html(index=False)}
+                    {brycesStandings.to_html(index=False, escape=False)}
                 </div>
                 <div class="table-container2">
-                    {bryceStandingsMobile.to_html(index=False)}
+                    {bryceStandingsMobile.to_html(index=False, escape=False)}
                 </div>        
             </div>
         </div>
@@ -1139,10 +1148,10 @@ html_content = f"""
             <div class="card-body">
                 <h2>Zach's Wins: <br>{zachWins}</h2>
                 <div class="table-container" >
-                    {zachsStandings.to_html(index=False)}
+                    {zachsStandings.to_html(index=False, escape=False)}
                 </div>
                 <div class="table-container2">
-                    {zachStandingsMobile.to_html(index=False)}
+                    {zachStandingsMobile.to_html(index=False, escape=False)}
                 </div>
             </div>
         </div>
