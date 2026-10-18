@@ -160,7 +160,7 @@ standings_sorted = standings.sort_values(by=['PCT', 'Team'], ascending=[False, T
 overall_live_rank = {row['Team']: rnk + 1 for rnk, row in standings_sorted.iterrows()}
 
 # Season badges, unlocked once 10% of the season (123 of 1230 games) has been played
-#   👑 best record   🗑️ worst record   💎 10+ spots better than draft slot   💀 10+ spots worse
+#   👑 best record   🗑️ worst record   💎 / 📈 10+ / 5-9 spots better than draft slot   💀 / 📉 10+ / 5-9 spots worse
 TOTAL_GAMES = 1230
 games_played = standings['W'].sum()
 def season_badges(row):
@@ -174,8 +174,12 @@ def season_badges(row):
     delta = overall_live_rank[row['Team']] - draft_info[row['Team']]['ovr']
     if delta <= -10:
         badges += ' 💎'
+    elif delta <= -5:
+        badges += ' 📈'
     elif delta >= 10:
         badges += ' 💀'
+    elif delta >= 5:
+        badges += ' 📉'
     return badges
 standings['Badges'] = standings.apply(season_badges, axis=1)
 
