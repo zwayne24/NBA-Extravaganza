@@ -159,6 +159,26 @@ standings['Streak'] = standings['Streak'].astype(int)
 standings_sorted = standings.sort_values(by=['PCT', 'Team'], ascending=[False, True]).reset_index(drop=True)
 overall_live_rank = {row['Team']: rnk + 1 for rnk, row in standings_sorted.iterrows()}
 
+# Season badges, unlocked once 10% of the season (123 of 1230 games) has been played
+#   👑 best record   🗑️ worst record   💎 10+ spots better than draft slot   💀 10+ spots worse
+TOTAL_GAMES = 1230
+games_played = standings['W'].sum()
+def season_badges(row):
+    if games_played < 0.10 * TOTAL_GAMES:
+        return ''
+    badges = ''
+    if row['PCT'] == standings['PCT'].max():
+        badges += ' 👑'
+    if row['PCT'] == standings['PCT'].min():
+        badges += ' 🗑️'
+    delta = overall_live_rank[row['Team']] - draft_info[row['Team']]['ovr']
+    if delta <= -10:
+        badges += ' 💎'
+    elif delta >= 10:
+        badges += ' 💀'
+    return badges
+standings['Badges'] = standings.apply(season_badges, axis=1)
+
 standings = standings.sort_values(by='W', ascending=False).drop(columns=['PCT'])
 
 chasesStandings = standings[standings['Team'].isin(ChasesTeams)].reset_index(drop=True)
@@ -191,10 +211,11 @@ chaseStandingsMobile['Team'] = chaseStandingsMobile['Team'].replace('OKC Thunder
 bryceStandingsMobile['Team'] = bryceStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
 zachStandingsMobile['Team'] = zachStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
 
-# Fire / ice emoji for teams on a 5+ game win / losing streak
+# Fire / ice emoji for teams on a 5+ game win / losing streak, plus season badges
 def add_streak_emoji(df):
-    df['Team'] = [team + (' 🔥' if streak >= 5 else ' 🧊' if streak <= -5 else '') for team, streak in zip(df['Team'], df['Streak'])]
-    return df.drop(columns=['Streak'])
+    df['Team'] = [team + (' 🔥' if streak >= 5 else ' 🧊' if streak <= -5 else '') + badges
+                  for team, streak, badges in zip(df['Team'], df['Streak'], df['Badges'])]
+    return df.drop(columns=['Streak', 'Badges'])
 
 chasesStandings = add_streak_emoji(chasesStandings)
 brycesStandings = add_streak_emoji(brycesStandings)
@@ -979,7 +1000,7 @@ html_content = f"""
 
     <script>
         let x = {chaseWins+ bryceWins + zachWins}
-        let y = {1230}
+        let y = {TOTAL_GAMES}
         let percentage = ((x / y) * 100).toFixed(1);
 
         let progressBar = document.getElementById("progressBar");
