@@ -121,6 +121,7 @@ def scrape_nba_standings():
                 'W': stats.get('wins', 0),
                 'L': stats.get('losses', 0),
                 'PCT': stats.get('winPercent', 0),
+                'Streak': stats.get('streak', 0),  # +N = won N straight, -N = lost N straight
             })
     return pd.DataFrame(all_teams)
 
@@ -153,6 +154,7 @@ for i, team in enumerate(BrycesTeams):
 standings['W'] = standings['W'].astype(int)
 standings['L'] = standings['L'].astype(int)
 standings['PCT'] = standings['PCT'].astype(float)
+standings['Streak'] = standings['Streak'].astype(int)
 
 standings_sorted = standings.sort_values(by=['PCT', 'Team'], ascending=[False, True]).reset_index(drop=True)
 overall_live_rank = {row['Team']: rnk + 1 for rnk, row in standings_sorted.iterrows()}
@@ -188,6 +190,18 @@ zachStandingsMobile = zachsStandings.copy()
 chaseStandingsMobile['Team'] = chaseStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
 bryceStandingsMobile['Team'] = bryceStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
 zachStandingsMobile['Team'] = zachStandingsMobile['Team'].replace('OKC Thunder', 'Oklahoma City Thunder').map(teamToAbbr)
+
+# Fire / ice emoji for teams on a 5+ game win / losing streak
+def add_streak_emoji(df):
+    df['Team'] = [team + (' 🔥' if streak >= 5 else ' 🧊' if streak <= -5 else '') for team, streak in zip(df['Team'], df['Streak'])]
+    return df.drop(columns=['Streak'])
+
+chasesStandings = add_streak_emoji(chasesStandings)
+brycesStandings = add_streak_emoji(brycesStandings)
+zachsStandings = add_streak_emoji(zachsStandings)
+chaseStandingsMobile = add_streak_emoji(chaseStandingsMobile)
+bryceStandingsMobile = add_streak_emoji(bryceStandingsMobile)
+zachStandingsMobile = add_streak_emoji(zachStandingsMobile)
 
 chaseStandingsMobile = chaseStandingsMobile[['Team', 'W']]
 bryceStandingsMobile = bryceStandingsMobile[['Team', 'W']]
@@ -1145,7 +1159,7 @@ html_content = f"""
 html_content += dpt
 
 # Write HTML content to a file
-with open('index.html', 'w') as f:
+with open('index.html', 'w', encoding='utf-8') as f:
     f.write(html_content)
 
 print("HTML file generated: index.html")
