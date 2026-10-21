@@ -575,7 +575,7 @@
     </div>
 
     <script>
-        let x = 0
+        let x = 3
         let y = 1230
         let percentage = ((x / y) * 100).toFixed(1);
 
@@ -599,10 +599,10 @@
     const myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Oct-19'],
+            labels: ['Oct-19', 'Oct-20'],
             datasets: [{
                 label: 'Chase',
-                data: [0],
+                data: [0, 0],
                 fill: false,
                 borderColor: '#2774AE',
                 tension: 0.1,
@@ -610,7 +610,7 @@
             },
             {
                 label: 'Bryce',
-                data: [0],
+                data: [0, 0],
                 fill: false,
                 borderColor: '#57068c',
                 tension: 0.1,
@@ -618,7 +618,7 @@
             },
             {
                 label: 'Zach',
-                data: [0],
+                data: [0, 0],
                 fill: false,
                 borderColor: '#e21833',
                 tension: 0.1,
@@ -673,7 +673,7 @@
                 <hr style="background: #2774AE; background-image: none; height: 3px; border: none; margin: 15px 0;"/>
             </div>
             <div class="card-body">
-                <h2>Chase's Wins: <br>0</h2>
+                <h2>Chase's Wins: <br>1</h2>
                 <div class="table-container">
                     <table border="1" class="dataframe">
   <thead>
@@ -685,37 +685,12 @@
   </thead>
   <tbody>
     <tr>
-      <td>Boston Celtics</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
       <td>OKC Thunder</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Sacramento Kings</td>
-      <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
-      <td>LA Clippers</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Golden State Warriors</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Denver Nuggets</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Toronto Raptors</td>
+      <td>Indiana Pacers</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -725,7 +700,32 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>Indiana Pacers</td>
+      <td>Boston Celtics</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Toronto Raptors</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Denver Nuggets</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Golden State Warriors</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>LA Clippers</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Sacramento Kings</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -747,31 +747,11 @@
   </thead>
   <tbody>
     <tr>
-      <td>BOS</td>
-      <td>0</td>
-    </tr>
-    <tr>
       <td>OKC</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
-      <td>SAC</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>LAC</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>GS</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>DEN</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>TOR</td>
+      <td>IND</td>
       <td>0</td>
     </tr>
     <tr>
@@ -779,7 +759,27 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>IND</td>
+      <td>BOS</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>TOR</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>DEN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>GS</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>LAC</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>SAC</td>
       <td>0</td>
     </tr>
     <tr>
@@ -800,7 +800,7 @@
                 <hr style="background: #57068c; background-image: none; height: 3px; border: none; margin: 15px 0;"/>
             </div>
             <div class="card-body">
-                <h2>Bryce's Wins: <br>0</h2>
+                <h2>Bryce's Wins: <br>1</h2>
                 <div class="table-container">
                     <table border="1" class="dataframe">
   <thead>
@@ -812,27 +812,22 @@
   </thead>
   <tbody>
     <tr>
-      <td>Utah Jazz</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Phoenix Suns</td>
-      <td>0</td>
+      <td>Detroit Pistons</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
-      <td>Los Angeles Lakers</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Washington Wizards</td>
+      <td>Chicago Bulls</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <td>New York Knicks</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Miami Heat</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -842,12 +837,7 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>Miami Heat</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Detroit Pistons</td>
+      <td>Washington Wizards</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -857,7 +847,17 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>Chicago Bulls</td>
+      <td>Los Angeles Lakers</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Phoenix Suns</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Utah Jazz</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -874,19 +874,11 @@
   </thead>
   <tbody>
     <tr>
-      <td>UTAH</td>
-      <td>0</td>
+      <td>DET</td>
+      <td>1</td>
     </tr>
     <tr>
-      <td>PHX</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>LAL</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>WSH</td>
+      <td>CHI</td>
       <td>0</td>
     </tr>
     <tr>
@@ -894,15 +886,15 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>BKN</td>
-      <td>0</td>
-    </tr>
-    <tr>
       <td>MIA</td>
       <td>0</td>
     </tr>
     <tr>
-      <td>DET</td>
+      <td>BKN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>WSH</td>
       <td>0</td>
     </tr>
     <tr>
@@ -910,7 +902,15 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>CHI</td>
+      <td>LAL</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>PHX</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>UTAH</td>
       <td>0</td>
     </tr>
   </tbody>
@@ -927,7 +927,7 @@
                 <hr style="background: #e21833; background-image: none; height: 3px; border: none; margin: 15px 0;"/>
             </div>
             <div class="card-body">
-                <h2>Zach's Wins: <br>0</h2>
+                <h2>Zach's Wins: <br>1</h2>
                 <div class="table-container" >
                     <table border="1" class="dataframe">
   <thead>
@@ -939,24 +939,34 @@
   </thead>
   <tbody>
     <tr>
+      <td>Philadelphia 76ers</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
       <td>Atlanta Hawks</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Milwaukee Bucks</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Charlotte Hornets</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>New Orleans Pelicans</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <td>San Antonio Spurs</td>
       <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Portland Trail Blazers</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Minnesota Timberwolves</td>
-      <td>0</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <td>Houston Rockets</td>
@@ -969,22 +979,12 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>New Orleans Pelicans</td>
+      <td>Minnesota Timberwolves</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
-      <td>Charlotte Hornets</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Philadelphia 76ers</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>Milwaukee Bucks</td>
+      <td>Portland Trail Blazers</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -1001,19 +1001,27 @@
   </thead>
   <tbody>
     <tr>
+      <td>PHI</td>
+      <td>1</td>
+    </tr>
+    <tr>
       <td>ATL</td>
       <td>0</td>
     </tr>
     <tr>
+      <td>MIL</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>CHA</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>NO</td>
+      <td>0</td>
+    </tr>
+    <tr>
       <td>SA</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>POR</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>MIN</td>
       <td>0</td>
     </tr>
     <tr>
@@ -1025,19 +1033,11 @@
       <td>0</td>
     </tr>
     <tr>
-      <td>NO</td>
+      <td>MIN</td>
       <td>0</td>
     </tr>
     <tr>
-      <td>CHA</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>PHI</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <td>MIL</td>
+      <td>POR</td>
       <td>0</td>
     </tr>
   </tbody>
@@ -1055,7 +1055,7 @@
         <button class="vf-btn" data-owner="Bryce" onclick="filterOwner(this, 'Bryce')" style="border-color:#57068c;color:#57068c;">Bryce</button>
         <button class="vf-btn" data-owner="Zach" onclick="filterOwner(this, 'Zach')" style="border-color:#e21833;color:#e21833;">Zach</button>
     </div>
-    <table class="standings-table" id="valueTable"><thead><tr><th>TEAM</th><th class="sortable" onclick="sortValueTable(1)">DRAFT &#8597;</th><th class="sortable" onclick="sortValueTable(2)">CURR &#8597;</th><th class="sortable" onclick="sortValueTable(3)">&#916; &#8597;</th></tr></thead><tbody><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">ATL</td><td data-val="14">14</td><td data-val="1">1</td><td data-val="-13"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;13</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">BOS</td><td data-val="6">6</td><td data-val="2">2</td><td data-val="-4"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;4</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">BKN</td><td data-val="28">28</td><td data-val="3">3</td><td data-val="-25"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;25</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">CHA</td><td data-val="20">20</td><td data-val="4">4</td><td data-val="-16"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;16</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">CHI</td><td data-val="27">27</td><td data-val="5">5</td><td data-val="-22"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;22</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">CLE</td><td data-val="4">4</td><td data-val="6">6</td><td data-val="2"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;2</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">DAL</td><td data-val="23">23</td><td data-val="7">7</td><td data-val="-16"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;16</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">DEN</td><td data-val="7">7</td><td data-val="8">8</td><td data-val="1"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;1</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">DET</td><td data-val="15">15</td><td data-val="9">9</td><td data-val="-6"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;6</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">GS</td><td data-val="18">18</td><td data-val="10">10</td><td data-val="-8"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;8</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">HOU</td><td data-val="8">8</td><td data-val="11">11</td><td data-val="3"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;3</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">IND</td><td data-val="13">13</td><td data-val="12">12</td><td data-val="-1"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;1</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">LAC</td><td data-val="25">25</td><td data-val="13">13</td><td data-val="-12"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;12</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">LAL</td><td data-val="9">9</td><td data-val="14">14</td><td data-val="5"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;5</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">MEM</td><td data-val="24">24</td><td data-val="15">15</td><td data-val="-9"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;9</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">MIA</td><td data-val="10">10</td><td data-val="16">16</td><td data-val="6"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;6</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">MIL</td><td data-val="29">29</td><td data-val="17">17</td><td data-val="-12"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;12</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">MIN</td><td data-val="11">11</td><td data-val="18">18</td><td data-val="7"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;7</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">NO</td><td data-val="26">26</td><td data-val="19">19</td><td data-val="-7"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;7</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">NY</td><td data-val="3">3</td><td data-val="20">20</td><td data-val="17"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;17</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">OKC</td><td data-val="1">1</td><td data-val="21">21</td><td data-val="20"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;20</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">ORL</td><td data-val="19">19</td><td data-val="22">22</td><td data-val="3"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;3</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">PHI</td><td data-val="5">5</td><td data-val="23">23</td><td data-val="18"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;18</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">PHX</td><td data-val="16">16</td><td data-val="24">24</td><td data-val="8"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;8</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">POR</td><td data-val="17">17</td><td data-val="25">25</td><td data-val="8"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;8</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">SAC</td><td data-val="30">30</td><td data-val="26">26</td><td data-val="-4"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;4</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">SA</td><td data-val="2">2</td><td data-val="27">27</td><td data-val="25"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;25</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">TOR</td><td data-val="12">12</td><td data-val="28">28</td><td data-val="16"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;16</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">UTAH</td><td data-val="22">22</td><td data-val="29">29</td><td data-val="7"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;7</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">WSH</td><td data-val="21">21</td><td data-val="30">30</td><td data-val="9"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;9</span></td></tr></tbody></table>
+    <table class="standings-table" id="valueTable"><thead><tr><th>TEAM</th><th class="sortable" onclick="sortValueTable(1)">DRAFT &#8597;</th><th class="sortable" onclick="sortValueTable(2)">CURR &#8597;</th><th class="sortable" onclick="sortValueTable(3)">&#916; &#8597;</th></tr></thead><tbody><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">DET</td><td data-val="15">15</td><td data-val="1">1</td><td data-val="-14"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;14</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">OKC</td><td data-val="1">1</td><td data-val="2">2</td><td data-val="1"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;1</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">PHI</td><td data-val="5">5</td><td data-val="3">3</td><td data-val="-2"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;2</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">ATL</td><td data-val="14">14</td><td data-val="4">4</td><td data-val="-10"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;10</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">BOS</td><td data-val="6">6</td><td data-val="5">5</td><td data-val="-1"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;1</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">BKN</td><td data-val="28">28</td><td data-val="6">6</td><td data-val="-22"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;22</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">CHA</td><td data-val="20">20</td><td data-val="7">7</td><td data-val="-13"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;13</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">CHI</td><td data-val="27">27</td><td data-val="8">8</td><td data-val="-19"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;19</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">CLE</td><td data-val="4">4</td><td data-val="9">9</td><td data-val="5"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;5</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">DAL</td><td data-val="23">23</td><td data-val="10">10</td><td data-val="-13"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;13</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">DEN</td><td data-val="7">7</td><td data-val="11">11</td><td data-val="4"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;4</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">GS</td><td data-val="18">18</td><td data-val="12">12</td><td data-val="-6"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;6</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">HOU</td><td data-val="8">8</td><td data-val="13">13</td><td data-val="5"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;5</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">IND</td><td data-val="13">13</td><td data-val="14">14</td><td data-val="1"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;1</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">LAC</td><td data-val="25">25</td><td data-val="15">15</td><td data-val="-10"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;10</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">LAL</td><td data-val="9">9</td><td data-val="16">16</td><td data-val="7"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;7</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">MEM</td><td data-val="24">24</td><td data-val="17">17</td><td data-val="-7"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;7</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">MIA</td><td data-val="10">10</td><td data-val="18">18</td><td data-val="8"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;8</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">MIL</td><td data-val="29">29</td><td data-val="19">19</td><td data-val="-10"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;10</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">MIN</td><td data-val="11">11</td><td data-val="20">20</td><td data-val="9"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;9</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">NO</td><td data-val="26">26</td><td data-val="21">21</td><td data-val="-5"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;5</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">NY</td><td data-val="3">3</td><td data-val="22">22</td><td data-val="19"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;19</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">ORL</td><td data-val="19">19</td><td data-val="23">23</td><td data-val="4"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;4</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">PHX</td><td data-val="16">16</td><td data-val="24">24</td><td data-val="8"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;8</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">POR</td><td data-val="17">17</td><td data-val="25">25</td><td data-val="8"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;8</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">SAC</td><td data-val="30">30</td><td data-val="26">26</td><td data-val="-4"><span style='color:#22c55e;font-weight:bold;'>&#9650;&nbsp;4</span></td></tr><tr data-owner="Zach"><td style="border-left:4px solid #e21833;font-weight:600;padding-left:12px;">SA</td><td data-val="2">2</td><td data-val="27">27</td><td data-val="25"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;25</span></td></tr><tr data-owner="Chase"><td style="border-left:4px solid #2774AE;font-weight:600;padding-left:12px;">TOR</td><td data-val="12">12</td><td data-val="28">28</td><td data-val="16"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;16</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">UTAH</td><td data-val="22">22</td><td data-val="29">29</td><td data-val="7"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;7</span></td></tr><tr data-owner="Bryce"><td style="border-left:4px solid #57068c;font-weight:600;padding-left:12px;">WSH</td><td data-val="21">21</td><td data-val="30">30</td><td data-val="9"><span style='color:#ef4444;font-weight:bold;'>&#9660;&nbsp;9</span></td></tr></tbody></table>
 </div>
 
 <div class="tab">
@@ -1066,14 +1066,33 @@
 
 <div id="TG" class="tabcontent">
     <h2 style="text-align: center;">Today's Games</h2>
-    <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#57068c'>DET</td><td style='color:#2774AE'>BOS</td><td>3:00 PM EDT</td><td>BOS -1.5</td></tr><td style='color:#57068c'>NY</td><td style='color:#e21833'>PHI</td><td>7:00 PM EDT</td><td>NY -4.5</td></tr><td style='color:#e21833'>SA</td><td style='color:#2774AE'>OKC</td><td>9:30 PM EDT</td><td>SA -2.5</td></tr></tbody></table>
+    <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#2774AE'>ORL</td><td style='color:#e21833'>ATL</td><td>7:00 PM EDT</td><td>ORL -3.5</td></tr><td style='color:#57068c'>WSH</td><td style='color:#e21833'>MIL</td><td>7:00 PM EDT</td><td>WSH -4.5</td></tr><td style='color:#57068c'>MIA</td><td style='color:#e21833'>MIN</td><td>7:30 PM EDT</td><td>MIA -1.5</td></tr><td style='color:#57068c'>BKN</td><td style='color:#e21833'>CHA</td><td>7:30 PM EDT</td><td>BKN -1.5</td></tr><td style='color:#2774AE'>TOR</td><td style='color:#57068c'>CHI</td><td>7:30 PM EDT</td><td>TOR -9.5</td></tr><td style='color:#2774AE'>MEM</td><td style='color:#57068c'>UTAH</td><td>8:00 PM EDT</td><td>MEM -1.5</td></tr><td style='color:#e21833'>NO</td><td style='color:#2774AE'>IND</td><td>8:00 PM EDT</td><td>IND -3.5</td></tr><td style='color:#e21833'>HOU</td><td style='color:#e21833'>DAL</td><td>8:30 PM EDT</td><td>HOU -9.5</td></tr><td style='color:#57068c'>LAL</td><td style='color:#2774AE'>GS</td><td>10:00 PM EDT</td><td>LAL -6.5</td></tr><td style='color:#e21833'>POR</td><td style='color:#57068c'>PHX</td><td>10:00 PM EDT</td><td>POR -2.5</td></tr><td style='color:#2774AE'>LAC</td><td style='color:#2774AE'>SAC</td><td>10:30 PM EDT</td><td>LAC -4.5</td></tr></tbody></table>
 </div>
 
 <div id="YG" class="tabcontent">
   <h2 style="text-align: center;">Yesterday's Games</h2>
-  <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody></tbody></table>
+  <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody><td style='background-color:#57068c;color:white;'> <strong>DET</strong></td><td style='color:#2774AE'>BOS</td><td>DET 121, BOS 113</td></tr><td style='color:#57068c'>NY</td><td style='background-color:#e21833;color:white;'> <strong>PHI</strong></td><td>PHI 106, NY 100</td></tr><td style='color:#e21833'>SA</td><td style='background-color:#2774AE;color:white;'> <strong>OKC</strong></td><td>OKC 116, SA 104</td></tr></tbody></table>
 </div>
 
+<script>
+    // Keep the owners' standings tables lined up: if a row wraps (e.g. a team with emojis)
+    // in one table, give the same row in the other tables the same height
+    function syncRowHeights() {
+        ['.table-container', '.table-container2'].forEach(function(sel) {
+            var rowSets = Array.from(document.querySelectorAll('#cardsRow ' + sel + ' table'))
+                .filter(function(t) { return t.offsetParent; })
+                .map(function(t) { return Array.from(t.rows); });
+            rowSets.forEach(function(rows) { rows.forEach(function(r) { r.style.height = ''; }); });
+            var n = Math.max.apply(null, rowSets.map(function(rows) { return rows.length; }).concat(0));
+            for (var i = 0; i < n; i++) {
+                var h = Math.max.apply(null, rowSets.map(function(rows) { return rows[i] ? rows[i].getBoundingClientRect().height : 0; }));
+                rowSets.forEach(function(rows) { if (rows[i]) rows[i].style.height = h + 'px'; });
+            }
+        });
+    }
+    window.addEventListener('load', syncRowHeights);
+    window.addEventListener('resize', syncRowHeights);
+</script>
 </body>
 </html>
 
@@ -1082,4 +1101,4 @@
     <h3 class="daily-overview-title">Daily Overview</h3>
     <table class="standings-table">
       <tr><th></th><th>Teams Playing</th><th>Max Wins</th><th>Min Wins</th><th>Favored</th></tr>
-    <tr><td style='color:#2774AE; font-weight:bold;'>Chase</td><td>2</td><td>2</td><td>0</td><td>1</td></tr><tr><td style='color:#57068c; font-weight:bold;'>Bryce</td><td>2</td><td>2</td><td>0</td><td>1</td></tr><tr><td style='color:#e21833; font-weight:bold;'>Zach</td><td>2</td><td>2</td><td>0</td><td>1</td></tr></table>
+    <tr><td style='color:#2774AE; font-weight:bold;'>Chase</td><td>7</td><td>6</td><td>1</td><td>5</td></tr><tr><td style='color:#57068c; font-weight:bold;'>Bryce</td><td>7</td><td>7</td><td>0</td><td>4</td></tr><tr><td style='color:#e21833; font-weight:bold;'>Zach</td><td>8</td><td>7</td><td>1</td><td>2</td></tr></table>
