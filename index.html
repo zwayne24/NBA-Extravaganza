@@ -599,10 +599,10 @@
     const myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Oct-19', 'Oct-20', 'Oct-21', 'Oct-22', 'Oct-23', 'Oct-24', 'Oct-25', 'Oct-26', 'Oct-27', 'Oct-28', 'Oct-29', 'Oct-30', 'Oct-31', 'Nov-01', 'Nov-02'],
+            labels: ['Oct-19', 'Oct-20', 'Oct-21', 'Oct-22', 'Oct-23', 'Oct-24', 'Oct-25', 'Oct-26', 'Oct-27', 'Oct-28', 'Oct-29', 'Oct-30', 'Oct-31', 'Nov-01', 'Nov-02', 'Nov-03'],
             datasets: [{
                 label: 'Chase',
-                data: [0, 0, 2, 3, 2, 0, 2, 5, 5, 3, 4, 5, 5, 5, 5],
+                data: [0, 0, 2, 3, 2, 0, 2, 5, 5, 3, 4, 5, 5, 5, 5, 5],
                 fill: false,
                 borderColor: '#2774AE',
                 tension: 0.1,
@@ -610,7 +610,7 @@
             },
             {
                 label: 'Bryce',
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 fill: false,
                 borderColor: '#57068c',
                 tension: 0.1,
@@ -618,7 +618,7 @@
             },
             {
                 label: 'Zach',
-                data: [0, 0, 3, 4, 5, 6, 5, 8, 9, 8, 10, 10, 14, 12, 15],
+                data: [0, 0, 3, 4, 5, 6, 5, 8, 9, 8, 10, 10, 14, 12, 15, 15],
                 fill: false,
                 borderColor: '#e21833',
                 tension: 0.1,
@@ -1066,12 +1066,12 @@
 
 <div id="TG" class="tabcontent">
     <h2 style="text-align: center;">Today's Games</h2>
-    <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody></tbody></table>
+    <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Time</th><th>Odds</th></tr></thead><tbody><td style='color:#57068c'>DET</td><td style='color:#e21833'>PHI</td><td>7:00 PM EST</td><td>DET -2.5</td></tr><td style='color:#57068c'>WSH</td><td style='color:#e21833'>ATL</td><td>7:00 PM EST</td><td>ATL -2.5</td></tr><td style='color:#2774AE'>BOS</td><td style='color:#e21833'>MIL</td><td>7:30 PM EST</td><td>BOS -11.5</td></tr><td style='color:#57068c'>BKN</td><td style='color:#e21833'>CHA</td><td>7:30 PM EST</td><td>CHA -3.5</td></tr><td style='color:#57068c'>NY</td><td style='color:#57068c'>CHI</td><td>7:30 PM EST</td><td>NY -11.5</td></tr><td style='color:#2774AE'>MEM</td><td style='color:#2774AE'>IND</td><td>8:00 PM EST</td><td>MEM -6.5</td></tr><td style='color:#e21833'>NO</td><td style='color:#57068c'>UTAH</td><td>8:00 PM EST</td><td>NO -5.5</td></tr><td style='color:#2774AE'>OKC</td><td style='color:#57068c'>CLE</td><td>8:00 PM EST</td><td>OKC -3.5</td></tr><td style='color:#e21833'>HOU</td><td style='color:#e21833'>MIN</td><td>8:30 PM EST</td><td>HOU -7.5</td></tr><td style='color:#2774AE'>DEN</td><td style='color:#2774AE'>TOR</td><td>9:00 PM EST</td><td>DEN -4.5</td></tr><td style='color:#57068c'>PHX</td><td style='color:#e21833'>POR</td><td>9:00 PM EST</td><td>POR -3.5</td></tr><td style='color:#e21833'>SA</td><td style='color:#e21833'>DAL</td><td>9:30 PM EST</td><td>SA -12.5</td></tr><td style='color:#2774AE'>SAC</td><td style='color:#57068c'>LAL</td><td>10:00 PM EST</td><td>LAL -12.5</td></tr><td style='color:#2774AE'>LAC</td><td style='color:#57068c'>MIA</td><td>10:30 PM EST</td><td>MIA -4.5</td></tr></tbody></table>
 </div>
 
 <div id="YG" class="tabcontent">
   <h2 style="text-align: center;">Yesterday's Games</h2>
-  <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody><td style='color:#57068c'>CLE</td><td style='background-color:#2774AE;color:white;'> <strong>OKC</strong></td><td>OKC 117, CLE 112</td></tr><td style='color:#e21833'>CHA</td><td style='background-color:#57068c;color:white;'> <strong>DET</strong></td><td>DET 124, CHA 91</td></tr><td style='color:#2774AE'>IND</td><td style='background-color:#e21833;color:white;'> <strong>ATL</strong></td><td>ATL 108, IND 104</td></tr><td style='background-color:#57068c;color:white;'> <strong>NY</strong></td><td style='color:#57068c'>BKN</td><td>NY 103, BKN 90</td></tr><td style='color:#2774AE'>ORL</td><td style='background-color:#57068c;color:white;'> <strong>WSH</strong></td><td>WSH 103, ORL 94</td></tr><td style='background-color:#e21833;color:white;'> <strong>PHI</strong></td><td style='color:#57068c'>CHI</td><td>PHI 126, CHI 107</td></tr><td style='color:#e21833'>DAL</td><td style='background-color:#2774AE;color:white;'> <strong>SAC</strong></td><td>SAC 115, DAL 100</td></tr><td style='color:#2774AE'>MEM</td><td style='background-color:#e21833;color:white;'> <strong>NO</strong></td><td>NO 135, MEM 134</td></tr><td style='background-color:#e21833;color:white;'> <strong>MIN</strong></td><td style='color:#e21833'>MIL</td><td>MIN 112, MIL 100</td></tr><td style='background-color:#e21833;color:white;'> <strong>HOU</strong></td><td style='color:#2774AE'>BOS</td><td>HOU 109, BOS 93</td></tr><td style='background-color:#e21833;color:white;'> <strong>SA</strong></td><td style='color:#57068c'>UTAH</td><td>SA 119, UTAH 97</td></tr><td style='color:#2774AE'>DEN</td><td style='background-color:#e21833;color:white;'> <strong>POR</strong></td><td>POR 118, DEN 110</td></tr><td style='background-color:#2774AE;color:white;'> <strong>GS</strong></td><td style='color:#57068c'>PHX</td><td>GS 116, PHX 113</td></tr><td style='color:#2774AE'>LAC</td><td style='background-color:#2774AE;color:white;'> <strong>TOR</strong></td><td>TOR 125, LAC 118</td></tr><td style='background-color:#57068c;color:white;'> <strong>LAL</strong></td><td style='color:#57068c'>MIA</td><td>LAL 138, MIA 117</td></tr></tbody></table>
+  <table><thead><tr><th>Home Team</th><th>Away Team</th><th>Result</th></tr></thead><tbody></tbody></table>
 </div>
 
 <script>
@@ -1101,4 +1101,4 @@
     <h3 class="daily-overview-title">Daily Overview</h3>
     <table class="standings-table">
       <tr><th></th><th>Teams Playing</th><th>Max Wins</th><th>Min Wins</th><th>Favored</th></tr>
-    <tr><td style='color:#2774AE; font-weight:bold;'>Chase</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td style='color:#57068c; font-weight:bold;'>Bryce</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td style='color:#e21833; font-weight:bold;'>Zach</td><td>0</td><td>0</td><td>0</td><td>0</td></tr></table>
+    <tr><td style='color:#2774AE; font-weight:bold;'>Chase</td><td>8</td><td>6</td><td>2</td><td>4</td></tr><tr><td style='color:#57068c; font-weight:bold;'>Bryce</td><td>10</td><td>9</td><td>1</td><td>4</td></tr><tr><td style='color:#e21833; font-weight:bold;'>Zach</td><td>10</td><td>8</td><td>2</td><td>6</td></tr></table>
