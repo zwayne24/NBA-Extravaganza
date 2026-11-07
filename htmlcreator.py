@@ -160,27 +160,18 @@ standings_sorted = standings.sort_values(by=['PCT', 'Team'], ascending=[False, T
 overall_live_rank = {row['Team']: rnk + 1 for rnk, row in standings_sorted.iterrows()}
 
 # Season badges, unlocked once 10% of the season (123 of 1230 games) has been played
-#   👑 best record   🗑️ worst record   💎 / 📈 10+ / 5-9 spots better than draft slot   💀 / 📉 10+ / 5-9 spots worse
+#   💎 / 💀 10+ spots better / worse than draft slot
 TOTAL_GAMES = 1230
 games_played = standings['W'].sum()
 def season_badges(row):
     if games_played < 0.10 * TOTAL_GAMES:
         return ''
-    badges = ''
-    if row['PCT'] == standings['PCT'].max():
-        badges += ' 👑'
-    if row['PCT'] == standings['PCT'].min():
-        badges += ' 🗑️'
     delta = overall_live_rank[row['Team']] - draft_info[row['Team']]['ovr']
     if delta <= -10:
-        badges += ' 💎'
-    elif delta <= -5:
-        badges += ' 📈'
-    elif delta >= 10:
-        badges += ' 💀'
-    elif delta >= 5:
-        badges += ' 📉'
-    return badges
+        return ' 💎'
+    if delta >= 10:
+        return ' 💀'
+    return ''
 standings['Badges'] = standings.apply(season_badges, axis=1)
 
 standings = standings.sort_values(by='W', ascending=False).drop(columns=['PCT'])
@@ -198,7 +189,7 @@ teamToAbbr = {
     'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND', 'LA Clippers': 'LAC', 'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
     'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN', 'New Orleans Pelicans': 'NO', 'New York Knicks': 'NY',
     'Oklahoma City Thunder': 'OKC', 'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX', 'Portland Trail Blazers': 'POR',
-    'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SA', 'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTAH', 'Washington Wizards': 'WSH'
+    'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SA', 'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WSH'
 }
 
 # Rename Oklahoma City Thunder to OKC Thunder for display
@@ -307,6 +298,9 @@ df.iloc[:, 1:] = df.iloc[:, 1:].sub(df.iloc[:, 1:].min(axis=1), axis=0)
 df['Day'] = pd.to_datetime(df['Day']).dt.strftime('%b-%d')
 
 # Fetch today's and yesterday's games from ESPN's JSON API
+def espn_abbr(abbr):
+    return 'UTA' if abbr == 'UTAH' else abbr
+
 matchups = []
 yesterday = []
 
@@ -314,11 +308,13 @@ for event in fetch_nba_scoreboard(date.today()):
     competition = event['competitions'][0]
     teams = {c['homeAway']: c for c in competition['competitors']}
     odds = (competition.get('odds') or [{}])[0].get('details')
+    if odds:
+        odds = odds.replace('UTAH', 'UTA')
     # e.g. "10/21 - 7:00 PM EDT" -> "7:00 PM EDT"
     time = event['status']['type'].get('shortDetail', '').split(' - ')[-1]
     matchups.append({
-        'away_team': teams['away']['team']['abbreviation'].lower(),
-        'home_team': teams['home']['team']['abbreviation'].lower(),
+        'away_team': espn_abbr(teams['away']['team']['abbreviation']).lower(),
+        'home_team': espn_abbr(teams['home']['team']['abbreviation']).lower(),
         'time': time,
         'odds': odds,
     })
@@ -329,12 +325,12 @@ for event in fetch_nba_scoreboard(date.today() - datetime.timedelta(days=1)):
     competition = event['competitions'][0]
     teams = {c['homeAway']: c for c in competition['competitors']}
     ranked = sorted(competition['competitors'], key=lambda c: int(c.get('score', 0)), reverse=True)
-    result = ', '.join(f"{c['team']['abbreviation']} {c['score']}" for c in ranked)
+    result = ', '.join(f"{espn_abbr(c['team']['abbreviation'])} {c['score']}" for c in ranked)
     yesterday.append({
-        'away_team': teams['away']['team']['abbreviation'].lower(),
-        'home_team': teams['home']['team']['abbreviation'].lower(),
+        'away_team': espn_abbr(teams['away']['team']['abbreviation']).lower(),
+        'home_team': espn_abbr(teams['home']['team']['abbreviation']).lower(),
         'result': result,
-        'winner': ranked[0]['team']['abbreviation'],
+        'winner': espn_abbr(ranked[0]['team']['abbreviation']),
     })
 
 # Create a DataFrame from the matchups list
